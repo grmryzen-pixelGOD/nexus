@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - OVERLORD NETWORK V5</title>
+    <title>NEXUS - HYPER-OVERDRIVE V6</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas', 'Courier New', monospace; user-select: none; }
         body { background-color: #020305; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
         
-        /* Telefoon Container */
-        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #05060a; border: 3px solid #10141d; border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); }
+        /* Telefoon Simulator */
+        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #05060a; border: 3px solid #10141d; border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(0, 0, 0, 0.9); }
         
         /* Cyber Header */
         .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0d111a; background: #05060a; z-index: 20; }
@@ -18,126 +18,95 @@
         .owner-badge-top { background: #ff0055; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 900; font-size: 10px; letter-spacing: 2px; box-shadow: 0 0 15px rgba(255,0,85,0.4); text-transform: uppercase; border: 1px solid #ff5588; }
         .owner-profit { font-size: 11px; color: #00ffcc; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
 
-        /* Arena met bewegend Grid-effect */
-        .live-screen { flex: 1; position: relative; background-color: #030407; background-image: linear-gradient(rgba(20, 25, 35, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 25, 35, 0.4) 1px, transparent 1px); background-size: 30px 30px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; transition: transform 0.1s ease-in-out; }
+        /* Dynamic Content Router Wrapper */
+        .view-segment { flex: 1; display: none; overflow-y: auto; padding: 20px; position: relative; background-color: #030407; padding-bottom: 90px; }
+        .view-segment.active-view { display: flex; flex-direction: column; }
         
-        /* Bewegende laserlijn op de achtergrond */
-        .live-screen::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(0, 255, 204, 0.03), transparent); animation: scanline 6s linear infinite; pointer-events: none; }
+        /* Achtergrond Matrix Scanline */
+        .view-segment::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(0, 255, 204, 0.02), transparent); animation: scanline 8s linear infinite; pointer-events: none; }
         @keyframes scanline { 0% { top: -100%; } 100% { top: 100%; } }
-        
-        /* SCREEN SHAKE EFFECT TOEVOEGING */
-        .live-screen.shake { animation: empshake 0.15s infinite; border: 1px solid #ff0055; }
+
+        /* TAB 1: ARENA SPECIFIC */
+        #arena-tab { justify-content: flex-end; background-image: linear-gradient(rgba(20, 25, 35, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 25, 35, 0.3) 1px, transparent 1px); background-size: 30px 30px; transition: transform 0.1s ease-in-out; }
+        #arena-tab.shake { animation: empshake 0.15s infinite; border: 1px solid #ff0055; }
         @keyframes empshake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(0px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(2px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(2px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            0% { transform: translate(1px, 1px); } 20% { transform: translate(-2px, 0px); }
+            40% { transform: translate(1px, -1px); } 60% { transform: translate(-1px, 2px); }
+            80% { transform: translate(-1px, -1px); } 100% { transform: translate(2px, 1px); }
         }
-
-        .live-badge { position: absolute; top: 15px; left: 15px; border: 1px solid #ff0055; color: #ff0055; padding: 4px 10px; font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,0,85,0.1); z-index: 10; }
-        
-        /* Versus Matrix & Live Power Grid Bar */
-        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 25px; z-index: 10; }
+        .live-badge { position: absolute; top: 15px; left: 15px; border: 1px solid #ff0055; color: #ff0055; padding: 4px 10px; font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,0,85,0.1); }
+        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 25px; }
         .fighters-info { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .creator { display: flex; flex-direction: column; }
-        .creator .name { font-weight: 900; font-size: 15px; letter-spacing: 1px; }
-        .creator .sub { font-size: 9px; color: #434956; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
-        .creator-a .name { color: #00ffcc; text-shadow: 0 0 8px rgba(0,255,204,0.2); }
+        .creator .name { font-weight: 900; font-size: 14px; letter-spacing: 1px; }
+        .creator .sub { font-size: 8px; color: #434956; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+        .creator-a .name { color: #00ffcc; }
         .creator-b { text-align: right; }
-        .creator-b .name { color: #ff0055; text-shadow: 0 0 8px rgba(255,0,85,0.2); }
+        .creator-b .name { color: #ff0055; }
         .vs-sign { background: #05060a; border: 1px solid #10141d; padding: 4px 10px; font-weight: 900; font-size: 11px; color: #525966; }
-        
-        /* Dynamische Progressiebalk */
-        .power-grid-wrapper { width: 100%; height: 6px; background: #10141d; border-radius: 3px; overflow: hidden; display: flex; border: 1px solid rgba(255,255,255,0.05); }
-        .grid-bar-a { width: 50%; height: 100%; background: #00ffcc; box-shadow: 0 0 10px #00ffcc; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .grid-bar-b { flex: 1; height: 100%; background: #ff0055; box-shadow: 0 0 10px #ff0055; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-
-        /* Tactical Chat Box */
-        .live-chat { max-height: 280px; overflow-y: hidden; display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; z-index: 5; }
-        .chat-msg { background: rgba(8, 10, 15, 0.95); padding: 12px 14px; border-radius: 4px; font-size: 12px; border: 1px solid #10141d; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.2s; }
-        
-        /* THE LOCKDOWN: Owner Chat Box */
-        .msg-owner {
-            background: linear-gradient(90deg, rgba(255,0,85,0.18) 0%, rgba(5,6,10,0.98) 100%) !important;
-            border: 1px solid #ff0055 !important;
-            box-shadow: 0 0 25px rgba(255,0,85,0.3);
-            position: relative;
-        }
-        .msg-owner::before {
-            content: 'SYSTEM LOCKDOWN';
-            position: absolute;
-            right: 12px;
-            top: 5px;
-            font-size: 7px;
-            color: rgba(255,0,85,0.7);
-            letter-spacing: 1.5px;
-            font-weight: 900;
-        }
-        
-        /* Badges */
+        .power-grid-wrapper { width: 100%; height: 6px; background: #10141d; border-radius: 3px; overflow: hidden; display: flex; }
+        .grid-bar-a { width: 50%; height: 100%; background: #00ffcc; box-shadow: 0 0 10px #00ffcc; transition: width 0.4s ease; }
+        .grid-bar-b { flex: 1; height: 100%; background: #ff0055; box-shadow: 0 0 10px #ff0055; transition: width 0.4s ease; }
+        .live-chat { max-height: 250px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .chat-msg { background: rgba(8, 10, 15, 0.95); padding: 12px; border-radius: 4px; font-size: 12px; border: 1px solid #10141d; display: flex; flex-direction: column; gap: 6px; }
+        .msg-owner { background: linear-gradient(90deg, rgba(255,0,85,0.15) 0%, rgba(5,6,10,0.95) 100%) !important; border: 1px solid #ff0055 !important; box-shadow: 0 0 20px rgba(255,0,85,0.2); position: relative; }
+        .msg-owner::before { content: 'SYSTEM LOCKDOWN'; position: absolute; right: 12px; top: 5px; font-size: 7px; color: rgba(255,0,85,0.7); letter-spacing: 1px; font-weight: 900; }
         .badge-row { display: flex; align-items: center; gap: 8px; }
-        .prestige-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase; }
-        
-        /* 10 Prestige Tiers */
-        .p-tier-1 { background: #2e3440; color: #d8dee9; border: 1px solid #434c5e; }
-        .p-tier-2 { background: #3b4252; color: #eceff4; border: 1px solid #4c566a; }
-        .p-tier-3 { background: #3b4432; color: #a3be8c; border: 1px solid #4f5b47; }
-        .p-tier-4 { background: #1f3047; color: #81a1c1; border: 1px solid #2b4366; }
+        .prestige-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; }
+        .p-tier-1 { background: #2e3440; color: #d8dee9; }
         .p-tier-5 { background: #004444; color: #00ffcc; border: 1px solid #005f5f; }
-        .p-tier-6 { background: #372b47; color: #b48ead; border: 1px solid #4c3b66; }
-        .p-tier-7 { background: #13332b; color: #8fbcbb; border: 1px solid #1f4c40; }
-        .p-tier-8 { background: rgba(255,0,85,0.15); color: #ff0055; border: 1px solid #ff0055; }
-        .p-tier-9 { background: #42341e; color: #ebcb8b; border: 1px solid #5e4a2b; }
-        .p-tier-10 { 
-            background: #000000; 
-            color: #ff0055; 
-            border: 1px solid #00ffcc; 
-            box-shadow: 0 0 10px #ff0055, inset 0 0 5px #00ffcc;
-            font-weight: 900;
-        }
-
-        /* Gevaarlijke Naam Skins */
+        .p-tier-10 { background: #000000; color: #ff0055; border: 1px solid #00ffcc; box-shadow: 0 0 10px #ff0055; }
         .name-user { font-weight: 700; color: #707a94; }
-        .name-high { color: #00ffcc; font-weight: 800; text-shadow: 0 0 5px rgba(0,255,204,0.2); }
-        
-        /* Owner Name Skin: VOID ECLIPSE */
-        .name-owner {
-            color: #ffffff;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: -2px -2px 0 #ff0055, 2px 2px 0 #00ffcc;
-            animation: heavyGlitch 1s infinite alternate;
-        }
-        @keyframes heavyGlitch {
-            0% { text-shadow: -1px -2px 0 #ff0055, 1px 1px 0 #00ffcc; }
-            100% { text-shadow: 2px 1px 0 #ff0055, -2px -1px 0 #00ffcc; }
-        }
-        
-        .chat-msg .text { color: #acb4c9; line-height: 1.4; font-size: 11px; }
-
-        /* Tactical Knoppen */
-        .action-area { padding: 25px; background-color: #05060a; border-top: 2px solid #0d111a; z-index: 20; }
-        .pool-stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .pool-box { display: flex; flex-direction: column; gap: 4px; }
+        .name-high { color: #00ffcc; font-weight: 800; }
+        .name-owner { color: #ffffff; font-weight: 900; letter-spacing: 1px; text-shadow: -1px -1px 0 #ff0055, 1px 1px 0 #00ffcc; }
+        .chat-msg .text { color: #acb4c9; font-size: 11px; }
+        .action-area { padding-top: 15px; border-top: 1px solid #10141d; }
+        .pool-stats { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .pool-box { display: flex; flex-direction: column; }
         .pool-box.right { align-items: flex-end; }
-        .pool-label { font-size: 9px; color: #3b414c; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .pool-amount { font-size: 22px; font-weight: 900; color: #fff; }
-        #amount-a { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.2); }
-        #amount-b { color: #ff0055; text-shadow: 0 0 10px rgba(255,0,85,0.2); }
+        .pool-label { font-size: 8px; color: #3b414c; text-transform: uppercase; letter-spacing: 1px; }
+        .pool-amount { font-size: 20px; font-weight: 900; }
+        #amount-a { color: #00ffcc; } #amount-b { color: #ff0055; }
+        .btn-container { display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 14px; border: 1px solid transparent; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; }
+        .btn-a { background: rgba(0,255,204,0.04); color: #00ffcc; border-color: #00ffcc; }
+        .btn-b { background: rgba(255,0,85,0.04); color: #ff0055; border-color: #ff0055; }
         
-        .btn-container { display: flex; gap: 12px; }
-        .btn { flex: 1; padding: 16px; border: 1px solid transparent; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; transition: 0.1s; }
-        .btn-a { background: rgba(0,255,204,0.04); color: #00ffcc; border-color: #00ffcc; box-shadow: inset 0 0 10px rgba(0,255,204,0.1); }
-        .btn-b { background: rgba(255,0,85,0.04); color: #ff0055; border-color: #ff0055; box-shadow: inset 0 0 10px rgba(255,0,85,0.1); }
-        .btn:active { transform: scale(0.97); background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
+        /* TAB 2: MENU / SETTINGS SPECIFIC */
+        .settings-title { font-size: 18px; font-weight: 900; color: #fff; border-left: 3px solid #ff0055; padding-left: 10px; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase; }
+        .profile-card { background: #080a0f; border: 1px solid #10141d; padding: 15px; border-radius: 6px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .avatar-box { width: 50px; height: 50px; background: #ff0055; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-weight: 900; color: #fff; font-size: 20px; box-shadow: 0 0 15px rgba(255,0,85,0.3); }
+        .profile-details { display: flex; flex-direction: column; }
+        .settings-group { display: flex; flex-direction: column; gap: 12px; }
+        .setting-row { background: #080a0f; border: 1px solid #10141d; padding: 15px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .setting-info { display: flex; flex-direction: column; gap: 4px; }
+        .setting-label { font-size: 12px; font-weight: 800; color: #fff; text-transform: uppercase; }
+        .setting-desc { font-size: 10px; color: #525966; }
+        
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #1a1f2c; transition: .3s; border-radius: 11px; border: 1px solid #2d3548; }
+        .slider::before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: #707a94; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: rgba(0, 255, 204, 0.2); border-color: #00ffcc; }
+        input:checked + .slider::before { transform: translateX(18px); background-color: #00ffcc; box-shadow: 0 0 8px #00ffcc; }
+
+        /* TAB 3: STATS SPECIFIC */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .stat-card { background: #080a0f; border: 1px solid #10141d; padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 8px; }
+        .stat-val { font-size: 20px; font-weight: 900; color: #00ffcc; }
+
+        /* TAB 4: LIVE TERMINAL LOGS */
+        .terminal-box { background: #020305; border: 1px solid #ff0055; padding: 12px; border-radius: 4px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 10px; color: #ff0055; box-shadow: inset 0 0 15px rgba(255,0,85,0.1); }
+        .log-entry { display: flex; gap: 8px; line-height: 1.3; }
+        .log-ts { color: #434956; }
+        .log-success { color: #00ffcc; }
+
+        /* NAV BALK (Onderkant) */
+        .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(5, 6, 10, 0.92); border-top: 2px solid #0d111a; display: flex; justify-content: space-around; align-items: center; padding: 0 10px; backdrop-filter: blur(10px); z-index: 30; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; color: #434956; transition: all 0.2s; width: 22%; height: 100%; font-weight: 900; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-item.nav-active { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.4); }
+        .nav-icon-box { width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; font-size: 14px; position: relative; }
+        .nav-active .nav-icon-box::after { content: ''; position: absolute; bottom: -6px; width: 12px; height: 2px; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; }
     </style>
 </head>
 <body>
@@ -146,14 +115,13 @@
         <div class="app-header">
             <span class="logo-text">NEXUS</span>
             <div class="owner-info-panel">
-                <span class="owner-badge-top">PRSTG X MASTER</span>
+                <span class="owner-badge-top" id="topBadge">PRSTG X MASTER</span>
                 <div class="owner-profit" id="profitDisplay">NET_WORTH: €100.00</div>
             </div>
         </div>
 
-        <div class="live-screen" id="liveArena">
+        <div class="view-segment active-view" id="arena-view">
             <div class="live-badge">NET_STREAM // PvP</div>
-            
             <div class="versus-bar">
                 <div class="fighters-info">
                     <div class="creator creator-a">
@@ -175,36 +143,89 @@
             <div class="live-chat" id="chatContainer">
                 <div class="chat-msg">
                     <div class="badge-row">
-                        <span class="prestige-tag p-tier-4">PRSTG IV</span>
+                        <span class="prestige-tag p-tier-5">PRSTG V</span>
                         <span class="user-name name-high">Samir070</span>
                     </div>
                     <span class="text">Inzet geplaatst op Node 01. Sloop hem.</span>
                 </div>
-                <div class="chat-msg">
-                    <div class="badge-row">
-                        <span class="prestige-tag p-tier-1">PRSTG I</span>
-                        <span class="user-name name-user">Mo_PvP</span>
+            </div>
+
+            <div class="action-area">
+                <div class="pool-stats">
+                    <div class="pool-box">
+                        <span class="pool-label">MATRIX_POT_01</span>
+                        <span class="pool-amount" id="amount-a">€9250</span>
                     </div>
-                    <span class="text">Anas countert dit binnen twee seconden, let op.</span>
+                    <div class="pool-box right">
+                        <span class="pool-label">MATRIX_POT_02</span>
+                        <span class="pool-amount" id="amount-b">€1480</span>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button class="btn btn-a" onclick="executeStrike('A')">EXECUTE_01</button>
+                    <button class="btn btn-b" onclick="executeStrike('B')">EXECUTE_02</button>
                 </div>
             </div>
         </div>
 
-        <div class="action-area">
-            <div class="pool-stats">
-                <div class="pool-box">
-                    <span class="pool-label">MATRIX_POT_01</span>
-                    <span class="pool-amount" id="amount-a">€9250</span>
-                </div>
-                <div class="pool-box right">
-                    <span class="pool-label">MATRIX_POT_02</span>
-                    <span class="pool-amount" id="amount-b">€1480</span>
+        <div class="view-segment" id="settings-view">
+            <h2 class="settings-title">Account Nodes</h2>
+            <div class="profile-card">
+                <div class="avatar-box">Ω</div>
+                <div class="profile-details">
+                    <span style="font-weight:900; font-size:14px; color:#fff;">grmryzen-pixelGOD</span>
+                    <span style="font-size:9px; color:#ff0055; margin-top:3px; font-weight:bold;">NETWORK ROOT ACCESS</span>
                 </div>
             </div>
-            <div class="btn-container">
-                <button class="btn btn-a" onclick="supportCreator('A')">EXECUTE_01</button>
-                <button class="btn btn-b" onclick="supportCreator('B')">EXECUTE_02</button>
+
+            <div class="settings-group">
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-label">Stealth Mode</span>
+                        <span class="setting-desc">Verberg je ip en owner status in chats.</span>
+                    </div>
+                    <label class="switch"><input type="checkbox" onchange="toggleStealth(this)"><span class="slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-label">Auto-Harvest Commissions</span>
+                        <span class="setting-desc">Inkomsten direct converteren naar kluis.</span>
+                    </div>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-label">Overlord Firewall (V6)</span>
+                        <span class="setting-desc">Weersta DDoS-aanvallen op je stream-node.</span>
+                    </div>
+                    <label class="switch"><input type="checkbox" checked disabled><span class="slider"></span></label>
+                </div>
             </div>
+        </div>
+
+        <div class="view-segment" id="stats-view">
+            <h2 class="settings-title">Network Analytics</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><span class="pool-label">Active Nodes</span><span class="stat-val">1,402</span></div>
+                <div class="stat-card"><span class="pool-label">Server Load</span><span class="stat-val" style="color:#ff0055;">41.2%</span></div>
+                <div class="stat-card"><span class="pool-label">Total Volume</span><span class="stat-val" id="totalVolumeDisplay">€10730</span></div>
+                <div class="stat-card"><span class="pool-label">Security Tier</span><span class="stat-val" style="color:#fff;">MIL-SPEC</span></div>
+            </div>
+        </div>
+
+        <div class="view-segment" id="logs-view">
+            <h2 class="settings-title">System Terminal</h2>
+            <div class="terminal-box" id="terminalLogs">
+                <div class="log-entry"><span class="log-ts">[04:14:02]</span><span>SYS_INIT: Overlord protocol online.</span></div>
+                <div class="log-entry"><span class="log-ts">[04:14:22]</span><span class="log-success">FIREWALL: Bypasses gedetecteerd en geneutraliseerd.</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item nav-active" id="nav-arena" onclick="switchTab('arena')"><div class="nav-icon-box">⚔️</div><span>Arena</span></div>
+            <div class="nav-item" id="nav-settings" onclick="switchTab('settings')"><div class="nav-icon-box">⚙️</div><span>Config</span></div>
+            <div class="nav-item" id="nav-stats" onclick="switchTab('stats')"><div class="nav-icon-box">📊</div><span>Stats</span></div>
+            <div class="nav-item" id="nav-logs" onclick="switchTab('logs')"><div class="nav-icon-box">💻</div><span>Terminal</span></div>
         </div>
     </div>
 
@@ -213,57 +234,78 @@
         let potB = 1480;
         let platformWinst = 100.00;
 
-        const rNamen = ["SolanaKoning", "Tarifit_G", "CryptoStrijder", "Knaap_PvP", "NXT_Lvl", "Alpha_Op", "DeltaHost"];
-        const rTiers = ["p-tier-1", "p-tier-2", "p-tier-3", "p-tier-4", "p-tier-5", "p-tier-6", "p-tier-7", "p-tier-8", "p-tier-9"];
-        const rTeksten = ["Matrix gecrasht door die klap.", "Dikke volumes rollen hier binnen.", "Systeem draait op max.", "Verhoog die inzet direct."];
+        const rNamen = ["SolanaKoning", "Tarifit_G", "CryptoStrijder", "Knaap_PvP", "Alpha_Op", "DeltaHost"];
+        const rTiers = ["p-tier-1", "p-tier-5"];
+        const rTeksten = ["Systeem draait stabiel.", "Gooi meer saaf op die pot!", "Node 01 is veel te sterk vandaag.", "Lekker bezig g."];
+
+        function switchTab(tabId) {
+            // Deactiveer alle tabbladen en views
+            document.querySelectorAll('.view-segment').forEach(el => el.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            
+            // Activeer de juiste selectie
+            document.getElementById(tabId + '-view').classList.add('active-view');
+            document.getElementById('nav-' + tabId).classList.add('nav-active');
+            
+            pushLog("NAV_ROUTER: Schakelen naar view -> " + tabId.toUpperCase(), false);
+        }
 
         function updatePowerGrid() {
             let totaal = potA + potB;
             let percentageA = (potA / totaal) * 100;
             document.getElementById("gridBarA").style.width = percentageA + "%";
+            document.getElementById("totalVolumeDisplay").innerText = "€" + totaal;
         }
 
-        function supportCreator(team) {
+        function executeStrike(team) {
             let inzet = 250; 
             let fee = inzet * 0.20; 
             platformWinst += fee;
             
             document.getElementById("profitDisplay").innerText = "NET_WORTH: €" + platformWinst.toFixed(2);
             
-            // Activeer de screen shake
-            let arena = document.getElementById("liveArena");
+            let arena = document.getElementById("arena-view");
             arena.classList.add("shake");
-            setTimeout(() => { arena.classList.remove("shake"); }, 300);
+            setTimeout(() => { arena.classList.remove("shake"); }, 150);
             
             if(team === 'A') {
                 potA += inzet;
                 document.getElementById("amount-a").innerText = "€" + potA;
+                pushLog("STRIKE: €" + inzet + " geïnjecteerd in NODE_01", true);
                 voegChatToe("grmryzen-pixelGOD", "OVERLORD SYSTEM ENGAGED. NODE_01 FUNDED.", "p-tier-10", true);
             } else {
                 potB += inzet;
                 document.getElementById("amount-b").innerText = "€" + potB;
+                pushLog("STRIKE: €" + inzet + " geïnjecteerd in NODE_02", true);
                 voegChatToe("grmryzen-pixelGOD", "OVERLORD SYSTEM ENGAGED. NODE_02 FUNDED.", "p-tier-10", true);
             }
             
             updatePowerGrid();
-            setTimeout(simuleerPubliekChat, 500);
+            setTimeout(simuleerPubliekChat, 400);
+        }
+
+        function toggleStealth(checkbox) {
+            let badge = document.getElementById("topBadge");
+            if(checkbox.checked) {
+                badge.innerText = "STEALTH_ON";
+                badge.style.background = "#2e3440";
+                badge.style.borderColor = "#434c5e";
+                pushLog("SECURITY: Stealth-modus geactiveerd. Identiteit gemaskeerd.", true);
+            } else {
+                badge.innerText = "PRSTG X MASTER";
+                badge.style.background = "#ff0055";
+                badge.style.borderColor = "#ff5588";
+                pushLog("SECURITY: Stealth-modus gedeactiveerd.", false);
+            }
         }
 
         function voegChatToe(naam, tekst, tierClass, isOwner = false) {
             let chatContainer = document.getElementById("chatContainer");
             let msg = document.createElement("div");
+            msg.className = isOwner ? "chat-msg msg-owner" : "chat-msg";
             
-            if(isOwner) {
-                msg.className = "chat-msg msg-owner";
-                tierName = "PRSTG X // OWNER";
-                nameClass = "name-owner";
-            } else {
-                msg.className = "chat-msg";
-                let tierNum = tierClass.split('-')[2];
-                let romanArray = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
-                tierName = "PRSTG " + romanArray[tierNum - 1];
-                nameClass = (tierNum > 4) ? "name-high" : "name-user";
-            }
+            let tierName = isOwner ? "PRSTG X // OWNER" : "PRSTG V";
+            let nameClass = isOwner ? "name-owner" : "name-user";
 
             msg.innerHTML = `
                 <div class="badge-row">
@@ -274,20 +316,25 @@
             `;
             
             chatContainer.appendChild(msg);
-            if (chatContainer.children.length > 5) chatContainer.removeChild(chatContainer.children[0]);
+            if (chatContainer.children.length > 4) chatContainer.removeChild(chatContainer.children[0]);
         }
 
         function simuleerPubliekChat() {
             let naam = rNamen[Math.floor(Math.random() * rNamen.length)];
             let tier = rTiers[Math.floor(Math.random() * rTiers.length)];
             let tekst = rTeksten[Math.floor(Math.random() * rTeksten.length)];
-            
             voegChatToe(naam, tekst, tier, false);
         }
 
-        // Initiele balk stand zetten
-        updatePowerGrid();
+        function pushLog(bericht, isSuccess) {
+            let logsBox = document.getElementById("terminalLogs");
+            let tijd = new Date().toLocaleTimeString('nl-NL');
+            let entry = document.createElement("div");
+            entry.className = "log-entry";
+            entry.innerHTML = `<span class="log-ts">[${tijd}]</span><span class="${isSuccess ? 'log-success' : ''}">${bericht}</span>`;
+            logsBox.appendChild(entry);
+            logsBox.scrollTop = logsBox.scrollHeight;
+        }
     </script>
-
 </body>
 </html>
