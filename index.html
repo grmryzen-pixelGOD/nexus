@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS LIVE</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        body { background-color: #0d0e12; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        
+        /* Telefoon Container Simulator */
+        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #13151c; border: 4px solid #1f232e; border-radius: 36px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        
+        /* Header met jouw profiel */
+        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f232e; background-color: #14161f; }
+        .logo-text { font-size: 24px; font-weight: 900; color: #00ffcc; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,255,204,0.2); }
+        .owner-badge { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .user-level { background: linear-gradient(135deg, #00ffcc, #00ff66); color: #000; padding: 4px 12px; border-radius: 12px; font-weight: 900; font-size: 11px; letter-spacing: 1px; box-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        .owner-profit { font-size: 11px; color: #00ffcc; font-weight: bold; margin-top: 2px; }
+        
+        /* Live Stream Simulator Scherm */
+        .live-screen { flex: 1; position: relative; background-color: #07080a; background-image: linear-gradient(rgba(31, 35, 46, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(31, 35, 46, 0.15) 1px, transparent 1px); background-size: 20px 20px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; }
+        
+        /* Grote Cyberpunk Gloed op de achtergrond */
+        .live-screen::before { content: ''; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; background: radial-gradient(circle, rgba(0,255,204,0.08) 0%, transparent 70%); pointer-events: none; }
+        
+        .live-badge { position: absolute; top: 15px; left: 15px; background-color: #ff0055; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; animation: blink 1.5s infinite; box-shadow: 0 0 15px rgba(255,0,85,0.4); z-index: 10; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        
+        /* Split Screen Arena Titels */
+        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; }
+        .creator { display: flex; flex-direction: column; gap: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+        .creator .name { font-weight: 800; font-size: 16px; }
+        .creator .sub { font-size: 11px; color: #a0a5b5; text-transform: uppercase; letter-spacing: 1px; }
+        .creator-a .name { color: #00ffcc; }
+        .creator-b { text-align: right; }
+        .creator-b .name { color: #ff0055; }
+        .vs-sign { background: #1c1f29; border: 1px solid #2c3140; padding: 6px 10px; border-radius: 10px; font-weight: 900; font-size: 12px; color: #fff; }
+
+        /* Live Chat Box */
+        .live-chat { max-height: 200px; overflow-y: hidden; display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; z-index: 5; }
+        .chat-msg { background: rgba(19, 21, 28, 0.85); padding: 10px 14px; border-radius: 14px; font-size: 13px; backdrop-filter: blur(10px); border-left: 4px solid #00ffcc; animation: slideUp 0.3s ease-out; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .chat-msg .name { font-weight: 800; color: #00ffcc; margin-right: 6px; }
+        .chat-msg .lvl { color: #00ff66; font-size: 10px; margin-left: 6px; font-weight: 900; background: rgba(0,255,102,0.1); padding: 1px 5px; border-radius: 4px; }
+
+        /* Bedieningsknoppen onderin */
+        .action-area { padding: 25px; background-color: #13151c; border-top: 1px solid #1f232e; }
+        .pool-stats { display: flex; justify-content: space-between; margin-bottom: 18px; }
+        .pool-box { display: flex; flex-direction: column; gap: 4px; }
+        .pool-box.right { align-items: flex-end; }
+        .pool-label { font-size: 11px; color: #a0a5b5; text-transform: uppercase; letter-spacing: 1px; }
+        .pool-amount { font-size: 22px; font-weight: 900; color: #fff; }
+        #amount-a { color: #00ffcc; }
+        #amount-b { color: #ff0055; }
+        
+        /* Knoppen */
+        .btn-container { display: flex; gap: 12px; }
+        .btn { flex: 1; padding: 16px; border: none; border-radius: 16px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden; }
+        .btn-a { background: linear-gradient(135deg, #00ffcc, #00bbff); color: #000; box-shadow: 0 4px 20px rgba(0,255,204,0.25); }
+        .btn-b { background: linear-gradient(135deg, #ff0055, #9900ff); color: #fff; box-shadow: 0 4px 20px rgba(255,0,85,0.25); }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: translateY(1px) scale(0.98); }
+
+        /* Level Up Pop-up Animatie */
+        .level-popup { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0.5); background: linear-gradient(135deg, #1c1f29, #0d0e12); border: 2px solid #00ffcc; padding: 20px 40px; border-radius: 20px; text-align: center; box-shadow: 0 0 30px rgba(0,255,204,0.4); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; }
+        .level-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .level-popup h2 { color: #00ffcc; font-size: 26px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .level-popup p { color: #fff; font-size: 14px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="level-popup" id="levelUpAlert">
+            <h2>⚡ LEVEL UP ⚡</h2>
+            <p id="levelPopupText">Je bent nu Level 43!</p>
+        </div>
+
+        <div class="app-header">
+            <span class="logo-text">NEXUS</span>
+            <div class="owner-badge">
+                <span class="user-level" id="ownerLvlDisplay">LVL 42 OWNER</span>
+                <span class="owner-profit" id="profitDisplay">Platform Winst: €0.00</span>
+            </div>
+        </div>
+
+        <div class="live-screen">
+            <div class="live-badge">● LIVE PvP</div>
+            
+            <div class="versus-bar">
+                <div class="creator creator-a">
+                    <span class="name">Marouane_Live</span>
+                    <span class="sub">Rank #1 Strijder</span>
+                </div>
+                <div class="vs-sign">VS</div>
+                <div class="creator creator-b">
+                    <span class="name">Anas_PvP</span>
+                    <span class="sub">Arena Killer</span>
+                </div>
+            </div>
+
+            <div class="live-chat" id="chatContainer">
+                <div class="chat-msg"><span class="name">Samir070</span><span class="lvl">LVL 5</span>: Marouane gaat deze sowieso pakken! 🔥</div>
+                <div class="chat-msg" style="border-left-color: #ff0055;"><span class="name">Mo_PvP</span><span class="lvl">LVL 12</span>: Anas is te snel broer, let op.</div>
+                <div class="chat-msg"><span class="name">CryptoKnaap</span><span class="lvl">LVL 24</span>: Ik gooi net dikke support, let's gooo.</div>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <div class="pool-stats">
+                <div class="pool-box">
+                    <span class="pool-label">Pot Marouane</span>
+                    <span class="pool-amount" id="amount-a">€540</span>
+                </div>
+                <div class="pool-box right">
+                    <span class="pool-label">Pot Anas</span>
+                    <span class="pool-amount" id="amount-b">€310</span>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-a" onclick="supportCreator('A')">Steun Marouane</button>
+                <button class="btn btn-b" onclick="supportCreator('B')">Steun Anas</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start-data instellen
+        let potA = 540;
+        let potB = 310;
+        let platformWinst = 0.00;
+        let eigenXP = 0;
+        let eigenLevel = 42;
+
+        // Namenlijst voor de chatsimulatie strakjes
+        const randomNamen = ["Riffi030", "SolanaKoning", "AppBuilder", "NXT_Lvl", "Tarifit_G", "Knaap_PvP", "CryptoStrijder"];
+        const randomTekstenA = ["Marouane sloopt hem!", "Lekker bezig g!", "Dikke saaf op rood!", "Hoppaaa weer erbij."];
+        const randomTekstenB = ["Anas counters zijn gevaarlijk 💀", "Anas pakt de hele pot mee.", "Team Anas sowieso!", "Maak hem af!!"];
+
+        function supportCreator(team) {
+            let inzet = 50; // Elke klik simuleert een inzet van €50 door een fan
+            let fee = inzet * 0.20; // Jouw 20% winstmodel per klik!
+            
+            platformWinst += fee;
+            eigenXP += 25; // Je krijgt 25 XP per klik
+            
+            // Updates uitvoeren in het scherm
+            document.getElementById("profitDisplay").innerText = "Platform Winst: €" + platformWinst.toFixed(2);
+            
+            if(team === 'A') {
+                potA += inzet;
+                document.getElementById("amount-a").innerText = "€" + potA;
+                voegChatToe("Jij (Owner)", randomTekstenA[Math.floor(Math.random() * randomTekstenA.length)], "#00ffcc");
+            } else {
+                potB += inzet;
+                document.getElementById("amount-b").innerText = "€" + potB;
+                voegChatToe("Jij (Owner)", randomTekstenB[Math.floor(Math.random() * randomTekstenB.length)], "#ff0055");
+            }
+
+            // Checken voor Level Up (Elke 100 XP stijg je een level)
+            if (eigenXP >= 100) {
+                eigenLevel++;
+                eigenXP = 0; // Reset XP teller voor volgend level
+                document.getElementById("ownerLvlDisplay").innerText = "LVL " + eigenLevel + " OWNER";
+                
+                // Pop-up triggeren
+                let popup = document.getElementById("levelUpAlert");
+                document.getElementById("levelPopupText").innerText = "Je bent nu Level " + eigenLevel + "!";
+                popup.classList.add("show");
+                
+                setTimeout(() => {
+                    popup.classList.remove("show");
+                }, 2000);
+            }
+            
+            // Simuleer direct een reactie van een andere kijker na jouw klik
+            setTimeout(simuleerPubliekChat, 800);
+        }
+
+        function voegChatToe(naam, tekst, borderColor) {
+            let chatContainer = document.getElementById("chatContainer");
+            
+            let nieuweMsg = document.createElement("div");
+            nieuweMsg.className = "chat-msg";
+            nieuweMsg.style.borderLeftColor = borderColor;
+            
+            nieuweMsg.innerHTML = `<span class="name">${naam}</span><span class="lvl">LVL ${eigenLevel}</span>: ${tekst}`;
+            
+            chatContainer.appendChild(nieuweMsg);
+            
+            // Zorg dat de chat automatisch doorschuift en de oudste verwijdert als er teveel zijn
+            if (chatContainer.children.length > 4) {
+                chatContainer.removeChild(chatContainer.children[0]);
+            }
+        }
+
+        function simuleerPubliekChat() {
+            let chatContainer = document.getElementById("chatContainer");
+            let randomNaam = randomNamen[Math.floor(Math.random() * randomNamen.length)];
+            let randomLvl = Math.floor(Math.random() * 30) + 1;
+            
+            let coinFlip = Math.random() > 0.5;
+            let tekst = coinFlip ? randomTekstenA[Math.floor(Math.random() * randomTekstenA.length)] : randomTekstenB[Math.floor(Math.random() * randomTekstenB.length)];
+            let color = coinFlip ? "#00ffcc" : "#ff0055";
+
+            let nieuweMsg = document.createElement("div");
+            nieuweMsg.className = "chat-msg";
+            nieuweMsg.style.borderLeftColor = color;
+            nieuweMsg.innerHTML = `<span class="name">${randomNaam}</span><span class="lvl">LVL ${randomLvl}</span>: ${tekst}`;
+            
+            chatContainer.appendChild(nieuweMsg);
+            
+            if (chatContainer.children.length > 4) {
+                chatContainer.removeChild(chatContainer.children[0]);
+            }
+        }
+    </script>
+
+</body>
+</html>
