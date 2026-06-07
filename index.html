@@ -3,36 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS - ULTRA V11</title>
+    <title>NEXUS - ULTRA V12</title>
     <style>
-        /* Base Reset */
+        /* Base Cyber Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Segoe UI', sans-serif; user-select: none; }
         body { background: #010206; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* Container & Effects */
+        /* Perfect Fit Phone Container */
         .phone-container { 
             width: 100%; max-width: 420px; height: 100vh; background: #04060f; 
             display: flex; flex-direction: column; position: relative; overflow: hidden;
             border: 2px solid #111827; box-shadow: 0 0 50px rgba(0,0,0,0.9);
         }
 
+        /* Scherm Flits & Shake */
         .flash-overlay { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 999; }
         @keyframes strikeFlash { 0% { opacity: 0; } 15% { opacity: 0.6; } 30% { opacity: 0; } }
         @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 20% { transform: translate(-4px, 3px); } 60% { transform: translate(4px, -2px); } 80% { transform: translate(2px, 2px); } }
 
-        /* Floating Particles / Gift Canvas */
-        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 90; }
+        /* Giga Gift Alert Banner Overlay */
+        .gift-alert-banner {
+            position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 90%; background: linear-gradient(135deg, #ff5500, #ff0055);
+            padding: 15px; border-radius: 8px; text-align: center; z-index: 500;
+            box-shadow: 0 0 30px #ff0055; border: 2px solid #fff; pointer-events: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .gift-alert-banner.show-alert { transform: translate(-50%, -50%) scale(1); }
+        .gift-alert-title { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
+        .gift-alert-sub { font-size: 12px; color: #ffcc00; font-weight: bold; margin-top: 4px; }
+
+        /* Canvas voor de Vliegende Deeltjes (Gift FX) */
+        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 400; }
 
         /* Header */
         .app-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #070a14; border-bottom: 2px solid #ff5500; }
         .logo-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ff5500; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.5); }
         .owner-cash { font-size: 12px; color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,204,0.4); }
 
-        /* Main Workspace Layout */
+        /* Workspace Grid Layout */
         .view-segment { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px; padding-bottom: 65px; }
-        .page-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
-        /* Live 1vs1 Arena */
+        /* Arena Vakken */
         .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
         .stream-card { 
             background: #090e1f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); 
@@ -47,10 +59,10 @@
         .profile-title { font-size: 13px; font-weight: 900; z-index: 2; }
         .profile-sub { font-size: 9px; color: #ff5500; font-weight: bold; z-index: 2; }
 
-        /* Ratio Bar */
+        /* Ratio bar */
         .ratio-bar-container { background: #080c16; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; }
         .track-bar { width: 100%; height: 6px; background: #161d31; border-radius: 2px; overflow: hidden; display: flex; }
-        .fill-left { width: 50%; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; transition: width 0.3s ease; }
+        .fill-left { width: 65%; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; transition: width 0.3s ease; }
         .fill-right { flex: 1; background: #ff0055; box-shadow: 0 0 8px #ff0055; }
 
         /* Chat Engine */
@@ -94,7 +106,7 @@
         .gift-lbl { font-size: 8px; color: #475569; font-weight: bold; }
         .gift-val { font-size: 8px; font-weight: 900; color: #00ffcc; }
 
-        /* Control Panel Knoppen met Camo Glow */
+        /* Control Panel */
         .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #050813; padding: 5px; border-radius: 8px; }
         .pot-box { display: flex; flex-direction: column; }
         .pot-lbl { font-size: 7px; color: #475569; font-weight: bold; }
@@ -105,23 +117,20 @@
         .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #000; box-shadow: 0 0 12px rgba(0,255,204,0.4); }
         .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 0 12px rgba(255,0,85,0.4); }
 
-        /* Real-Time Settings Overlay Screen */
+        /* Werkend Settings Panel Screen Overlay */
         .settings-screen { 
             position: absolute; inset: 0; background: rgba(3, 5, 12, 0.98); 
-            z-index: 200; display: none; flex-direction: column; padding: 20px;
-            animation: paneSlide 0.25s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+            z-index: 800; display: none; flex-direction: column; padding: 20px;
         }
-        @keyframes paneSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        .settings-title { font-size: 20px; color: #ff5500; font-style: italic; border-bottom: 2px solid #ff5500; padding-bottom: 8px; margin-bottom: 20px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
+        .settings-title { font-size: 18px; color: #ff5500; font-style: italic; border-bottom: 2px solid #ff5500; padding-bottom: 6px; margin-bottom: 20px; letter-spacing: 1px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .setting-lbl { font-size: 12px; font-weight: bold; color: #cbd5e1; }
-        .setting-input { background: #0c1125; border: 1px solid #ff5500; color: #fff; padding: 6px 10px; border-radius: 4px; font-weight: bold; width: 140px; text-align: center; }
-        .close-btn { background: #ff5500; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; }
+        .setting-input { background: #0c1125; border: 1px solid #ff5500; color: #fff; padding: 6px; border-radius: 4px; font-weight: bold; width: 140px; text-align: center; font-size: 12px; }
+        .close-btn { background: linear-gradient(135deg, #ff5500, #ff0055); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; box-shadow: 0 0 15px rgba(255,85,0,0.4); }
 
-        /* Navigation Footer */
+        /* Navigation Footer Navbar */
         .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #03050c; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 11px; font-weight: bold; cursor: pointer; width: 33%; text-align: center; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 11px; font-weight: bold; cursor: pointer; width: 50%; text-align: center; }
         .nav-link.active-link { color: #ff5500; text-shadow: 0 0 8px #ff5500; }
     </style>
 </head>
@@ -133,24 +142,29 @@
         
         <canvas id="fxCanvas"></canvas>
 
+        <div class="gift-alert-banner" id="alertBanner">
+            <div class="gift-alert-title" id="alertTitle">STREAK LAUNCHED</div>
+            <div class="gift-alert-sub" id="alertSub">OPERATOR ORDER DEPLOYED</div>
+        </div>
+
         <div class="settings-screen" id="settingsPanel">
-            <div class="settings-title">⚙️ NEXUS CONTROL INTERFACE</div>
+            <div class="settings-title">⚙️ NEXUS INTERFACE ENGINE</div>
             <div class="setting-row">
-                <span class="setting-lbl">OPERATOR USERNAME</span>
+                <span class="setting-lbl">JOUW NAAM (GAMERTAG)</span>
                 <input type="text" class="setting-input" id="cfgUsername" value="grmryzen-pixelGOD">
             </div>
             <div class="setting-row">
-                <span class="setting-lbl">STREAMER 1 VOTE POT</span>
+                <span class="setting-lbl">VOTE POT STRIJDER 01</span>
                 <input type="number" class="setting-input" id="cfgPotA" value="5240">
             </div>
             <div class="setting-row">
-                <span class="setting-lbl">SIMULATE CHAT VELOCITY</span>
+                <span class="setting-lbl">CHAT STREAM TEMPO</span>
                 <select class="setting-input" id="cfgSpeed">
-                    <option value="1500">FAST SPEED</option>
-                    <option value="3000">NORMAL SPEED</option>
+                    <option value="1500">SNELLER (1.5s)</option>
+                    <option value="3000">NORMAAL (3.0s)</option>
                 </select>
             </div>
-            <button class="close-btn" onclick="toggleSettingsMenu(false)">APPLY ENGINE CONFIG</button>
+            <button class="close-btn" onclick="applySettingsEngine()">APPLY ENGINE CONFIG</button>
         </div>
 
         <div class="app-header">
@@ -160,82 +174,79 @@
 
         <div class="view-segment">
             
-            <div class="page-content" id="stagePage">
-                <div class="live-arena-grid">
-                    <div class="stream-card active-blue" id="boxA">
-                        <div class="live-pill">LIVE</div>
-                        <div class="viewer-pill">👁️ 8.4K</div>
-                        <div class="profile-title">Marouane_Live</div>
-                        <div class="profile-sub">PRESTIGE MASTER</div>
-                    </div>
-                    <div class="stream-card" id="boxB">
-                        <div class="live-pill">LIVE</div>
-                        <div class="viewer-pill">👁️ 1.2K</div>
-                        <div class="profile-title">Anas_PvP</div>
-                        <div class="profile-sub">ELITE COMMANDO</div>
-                    </div>
+            <div class="live-arena-grid">
+                <div class="stream-card active-blue" id="boxA">
+                    <div class="live-pill">LIVE</div>
+                    <div class="viewer-pill">👁️ 8.4K</div>
+                    <div class="profile-title">Marouane_Live</div>
+                    <div class="profile-sub">PRESTIGE MASTER</div>
                 </div>
-
-                <div class="ratio-bar-container">
-                    <div class="track-bar">
-                        <div class="fill-left" id="powerRatioA" style="width: 65%;"></div>
-                        <div class="fill-right"></div>
-                    </div>
-                </div>
-
-                <div class="chat-view-master" id="chatFlow">
-                    <div class="msg-line" style="border-left-color: #0055ff;">
-                        <div class="msg-meta">
-                            <span class="prestige-badge badge-lvl-water">💧 LVL 14</span>
-                            <span class="name-txt camo-water">Mo_BlackOps</span>
-                        </div>
-                        <span class="text-normal">Zieke stroom effecten bro</span>
-                    </div>
-                </div>
-
-                <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
-                <div class="gift-row">
-                    <div class="gift-node" onclick="triggerGigaGift('⚡', 'RC-XD Shock', 10)">
-                        <span class="gift-avatar">⚡</span>
-                        <span class="gift-lbl">RC-XD Shock</span>
-                        <span class="gift-val">€10</span>
-                    </div>
-                    <div class="gift-node" onclick="triggerGigaGift('🔮', 'UAV Aura', 25)">
-                        <span class="gift-avatar">🔮</span>
-                        <span class="gift-lbl">UAV Aura</span>
-                        <span class="gift-val">€25</span>
-                    </div>
-                    <div class="gift-node" onclick="triggerGigaGift('👑', 'Chopper VIP', 50)">
-                        <span class="gift-avatar">👑</span>
-                        <span class="gift-lbl">Chopper VIP</span>
-                        <span class="gift-val">€50</span>
-                    </div>
-                    <div class="gift-node" onclick="triggerGigaGift('🚀', 'MOAB NUKE', 100)">
-                        <span class="gift-avatar">🚀</span>
-                        <span class="gift-lbl">MOAB NUKE</span>
-                        <span class="gift-val">€100</span>
-                    </div>
-                </div>
-
-                <div class="controls-row">
-                    <div class="pot-box">
-                        <span class="pot-lbl">POT 01</span>
-                        <span class="pot-cash c-blue" id="potDisplayA">€5240</span>
-                    </div>
-                    <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
-                    <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
-                    <div class="pot-box" style="text-align: right;">
-                        <span class="pot-lbl">POT 02</span>
-                        <span class="pot-cash c-pink" id="potDisplayB">€2760</span>
-                    </div>
+                <div class="stream-card" id="boxB">
+                    <div class="live-pill">LIVE</div>
+                    <div class="viewer-pill">👁️ 1.2K</div>
+                    <div class="profile-title">Anas_PvP</div>
+                    <div class="profile-sub">ELITE COMMANDO</div>
                 </div>
             </div>
 
+            <div class="ratio-bar-container">
+                <div class="track-bar">
+                    <div class="fill-left" id="powerRatioA" style="width: 65%;"></div>
+                    <div class="fill-right"></div>
+                </div>
+            </div>
+
+            <div class="chat-view-master" id="chatFlow">
+                <div class="msg-line" style="border-left-color: #0055ff;">
+                    <div class="msg-meta">
+                        <span class="prestige-badge badge-lvl-water">💧 LVL 14</span>
+                        <span class="name-txt camo-water">Mo_BlackOps</span>
+                    </div>
+                    <span class="text-normal">Kijk die deeltjes vliegen nu dan! 🤯🔥</span>
+                </div>
+            </div>
+
+            <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
+            <div class="gift-row">
+                <div class="gift-node" onclick="triggerGigaGift('⚡', 'RC-XD Shock', 10)">
+                    <span class="gift-avatar">⚡</span>
+                    <span class="gift-lbl">RC-XD Shock</span>
+                    <span class="gift-val">€10</span>
+                </div>
+                <div class="gift-node" onclick="triggerGigaGift('🔮', 'UAV Aura', 25)">
+                    <span class="gift-avatar">🔮</span>
+                    <span class="gift-lbl">UAV Aura</span>
+                    <span class="gift-val">€25</span>
+                </div>
+                <div class="gift-node" onclick="triggerGigaGift('👑', 'Chopper VIP', 50)">
+                    <span class="gift-avatar">👑</span>
+                    <span class="gift-lbl">Chopper VIP</span>
+                    <span class="gift-val">€50</span>
+                </div>
+                <div class="gift-node" onclick="triggerGigaGift('🚀', 'MOAB NUKE', 100)">
+                    <span class="gift-avatar">🚀</span>
+                    <span class="gift-lbl">MOAB NUKE</span>
+                    <span class="gift-val">€100</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="pot-box">
+                    <span class="pot-lbl">POT 01</span>
+                    <span class="pot-cash c-blue" id="potDisplayA">€5240</span>
+                </div>
+                <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
+                <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
+                <div class="pot-box" style="text-align: right;">
+                    <span class="pot-lbl">POT 02</span>
+                    <span class="pot-cash c-pink" id="potDisplayB">€2760</span>
+                </div>
+            </div>
         </div>
 
         <div class="bottom-navbar">
-            <div class="nav-link active-link" id="navStage" onclick="switchMainTab('stage')"><span>STAGE</span></div>
-            <div class="nav-link" id="navConfig" onclick="toggleSettingsMenu(true)"><span>CONFIG ⚙️</span></div>
+            <div class="nav-link active-link" id="navStage" onclick="openControlMenu(false)"><span>STAGE</span></div>
+            <div class="nav-link" id="navConfig" onclick="openControlMenu(true)"><span>CONFIG ⚙️</span></div>
         </div>
 
     </div>
@@ -245,11 +256,12 @@
         let pB = 2760;
         let wallet = 2380.00;
         let particles = [];
+        let chatTimer = null;
+        let loopInterval = 2500;
 
         const canvas = document.getElementById("fxCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Resize Canvas to device screen size
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
@@ -257,40 +269,44 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Particle System Loop
-        function spawnParticles(emoji, count) {
+        // Canvas Particle Engine voor Échte Vliegende Gift Effecten
+        function spawnFlyingEmojis(emoji, count) {
             for(let i=0; i<count; i++) {
                 particles.push({
-                    x: canvas.width / 2 + (Math.random() * 100 - 50),
-                    y: canvas.height - 120,
-                    vx: Math.random() * 6 - 3,
-                    vy: -(Math.random() * 5 + 4),
-                    size: Math.random() * 12 + 18,
+                    x: Math.random() * canvas.width,
+                    y: canvas.height - 80,
+                    vx: Math.random() * 4 - 2,
+                    vy: -(Math.random() * 6 + 5),
+                    size: Math.random() * 14 + 20,
                     text: emoji,
-                    alpha: 1
+                    alpha: 1,
+                    rotation: Math.random() * Math.PI
                 });
             }
         }
 
-        function updateFXEngine() {
+        function runFXLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for(let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.alpha -= 0.015;
+                p.alpha -= 0.012;
+                p.rotation += 0.02;
                 
                 ctx.save();
                 ctx.globalAlpha = p.alpha;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
                 ctx.font = `${p.size}px Impact`;
-                ctx.fillText(p.text, p.x, p.y);
+                ctx.fillText(p.text, -p.size/2, p.size/2);
                 ctx.restore();
 
-                if(p.alpha <= 0) particles.splice(i, 1);
+                if(p.alpha <= 0 || p.y < 0) particles.splice(i, 1);
             }
-            requestAnimationFrame(updateFXEngine);
+            requestAnimationFrame(runFXLoop);
         }
-        updateFXEngine();
+        runFXLoop();
 
         function triggerImpactFx() {
             let flash = document.getElementById("flashFx");
@@ -300,12 +316,22 @@
             setTimeout(() => { flash.style.animation = ""; container.style.animation = ""; }, 350);
         }
 
+        // Activeer Gift inclusief Visuele Banner én Rondvliegende Deeltjes
         function triggerGigaGift(emoji, giftName, cost) {
             triggerImpactFx();
-            spawnParticles(emoji, 15); // Knalt 15 vliegende emoji-deeltjes op je scherm!
+            spawnFlyingEmojis(emoji, 25); // Schiet direct 25 losse emoji-deeltjes omhoog!
+            
             wallet += cost;
             document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
             
+            // Toon de Giga Alert Banner op het scherm
+            let banner = document.getElementById("alertBanner");
+            document.getElementById("alertTitle").innerText = `🔥 ${giftName.toUpperCase()} DEPLOYED!`;
+            document.getElementById("alertSub").innerText = `BY ORDER OF PRESTIGE MASTER`;
+            banner.classList.add("show-alert");
+            
+            setTimeout(() => { banner.classList.remove("show-alert"); }, 2000);
+
             let currentOwner = document.getElementById("cfgUsername").value;
             injectPrestigeChat(currentOwner, `LAUNCHED ULTRA PRESTIGE STREAK: ${emoji} ${giftName.toUpperCase()}!`, true, true);
         }
@@ -327,19 +353,29 @@
             document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
             
             let currentOwner = document.getElementById("cfgUsername").value;
-            injectPrestigeChat(currentOwner, `OVERLORD SYSTEM ENGAGED. NODE 0${target === 'A' ? '1' : '2'} FUNDED.`, true, false);
+            injectPrestigeChat(currentOwner, `OVERLORD SYSTEM ENGAGED. NODE 0${target === 'A' ? '1' : '2'} FUNDED. ⚡`, true, false);
         }
 
-        function toggleSettingsMenu(show) {
+        // Settings Scherm Besturing
+        function openControlMenu(show) {
             let panel = document.getElementById("settingsPanel");
             panel.style.display = show ? "flex" : "none";
-            if(!show) {
-                // Instellingen toepassen direct in de live engine counters!
-                pA = parseInt(document.getElementById("cfgPotA").value) || pA;
-                document.getElementById("potDisplayA").innerText = "€" + pA;
-                let totalSum = pA + pB;
-                document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
-            }
+            document.getElementById("navConfig").classList.toggle("active-link", show);
+            document.getElementById("navStage").classList.toggle("active-link", !show);
+        }
+
+        function applySettingsEngine() {
+            pA = parseInt(document.getElementById("cfgPotA").value) || pA;
+            document.getElementById("potDisplayA").innerText = "€" + pA;
+            
+            let totalSum = pA + pB;
+            document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
+            
+            loopInterval = parseInt(document.getElementById("cfgSpeed").value);
+            clearInterval(chatTimer);
+            startChatSimulation();
+            
+            openControlMenu(false);
         }
 
         function injectPrestigeChat(sender, message, isGodMode, isGift) {
@@ -377,14 +413,16 @@
             flow.scrollTop = flow.scrollHeight;
         }
 
-        // Automatische chat-loop
-        setInterval(() => {
-            const names = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
-            const texts = ["Gooi die nuke dan!", "Knettert helemaal op m'n scherm", "Kijk die deeltjes vliegen wtf", "Zieke stroom effecten bro"];
-            let user = names[Math.floor(Math.random() * names.length)];
-            let txt = texts[Math.floor(Math.random() * texts.length)];
-            injectPrestigeChat(user, txt, false, false);
-        }, 2500);
+        function startChatSimulation() {
+            chatTimer = setInterval(() => {
+                const names = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
+                const texts = ["Gooi die nuke dan!", "Kijk die deeltjes vliegen wtf!! 🔥", "Team 01 staat voor!", "Zieke stroom effecten bro"];
+                let user = names[Math.floor(Math.random() * names.length)];
+                let txt = texts[Math.floor(Math.random() * texts.length)];
+                injectPrestigeChat(user, txt, false, false);
+            }, loopInterval);
+        }
+        startChatSimulation();
     </script>
 </body>
 </html>
