@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS - PRESTIGE V10</title>
+    <title>NEXUS - ULTRA V11</title>
     <style>
-        /* Base Cyber Reset */
+        /* Base Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Segoe UI', sans-serif; user-select: none; }
-        body { background: #010206; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; position: relative; }
+        body { background: #010206; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* Perfect Fit Phone Simulator */
+        /* Container & Effects */
         .phone-container { 
             width: 100%; max-width: 420px; height: 100vh; background: #04060f; 
             display: flex; flex-direction: column; position: relative; overflow: hidden;
             border: 2px solid #111827; box-shadow: 0 0 50px rgba(0,0,0,0.9);
-            transition: transform 0.1s ease;
         }
 
-        /* Screen Shake & Flash Animatie */
         .flash-overlay { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 999; }
-        @keyframes strikeFlash { 0% { opacity: 0; } 15% { opacity: 0.7; } 30% { opacity: 0; } }
-        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 20% { transform: scale(0.98) translate(-4px, 3px); } 40% { transform: translate(4px, -2px); } 66% { transform: translate(-2px, -3px); } 80% { transform: translate(2px, 2px); } }
+        @keyframes strikeFlash { 0% { opacity: 0; } 15% { opacity: 0.6; } 30% { opacity: 0; } }
+        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 20% { transform: translate(-4px, 3px); } 60% { transform: translate(4px, -2px); } 80% { transform: translate(2px, 2px); } }
 
-        /* Premium Black Ops Header */
+        /* Floating Particles / Gift Canvas */
+        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 90; }
+
+        /* Header */
         .app-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #070a14; border-bottom: 2px solid #ff5500; }
         .logo-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ff5500; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.5); }
-        .owner-cash { font-size: 12px; color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,204,0.4); text-align: right; }
+        .owner-cash { font-size: 12px; color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,204,0.4); }
 
-        /* Workspace Grid Layout */
+        /* Main Workspace Layout */
         .view-segment { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px; padding-bottom: 65px; }
+        .page-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
-        /* 1vs1 Arena Vakken met Neon Glow */
-        .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; flex-shrink: 0; }
+        /* Live 1vs1 Arena */
+        .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
         .stream-card { 
             background: #090e1f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); 
             position: relative; height: 110px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 6px; 
@@ -45,76 +47,54 @@
         .profile-title { font-size: 13px; font-weight: 900; z-index: 2; }
         .profile-sub { font-size: 9px; color: #ff5500; font-weight: bold; z-index: 2; }
 
-        /* Ratio bar */
+        /* Ratio Bar */
         .ratio-bar-container { background: #080c16; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; }
-        .track-bar { width: 100%; height: 5px; background: #161d31; border-radius: 2px; overflow: hidden; display: flex; }
+        .track-bar { width: 100%; height: 6px; background: #161d31; border-radius: 2px; overflow: hidden; display: flex; }
         .fill-left { width: 50%; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; transition: width 0.3s ease; }
         .fill-right { flex: 1; background: #ff0055; box-shadow: 0 0 8px #ff0055; }
 
-        /* 🔥 DE ULTIEME CHATBOX (OPGELOST EN VOLLEDIG OPTIMAAL) */
+        /* Chat Engine */
         .chat-view-master { 
             flex: 1; background: rgba(3, 5, 11, 0.95); border-radius: 10px; 
             border: 1px solid rgba(255,255,255,0.03); padding: 8px; 
             display: flex; flex-direction: column; gap: 6px; overflow-y: auto; 
-            margin-bottom: 6px; min-height: 150px;
+            margin-bottom: 6px; min-height: 140px;
         }
 
-        /* --- PRESTIGE BADGES & ELEMENTEN GENERATOR --- */
         .msg-line { display: flex; flex-direction: column; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.01); border-left: 3px solid #ff5500; }
         .msg-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
         
-        /* CoD Badge Bouwwerk */
-        .prestige-badge { 
-            font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 3px; 
-            color: #fff; text-transform: uppercase; display: inline-flex; align-items: center; gap: 3px;
-            border: 1px solid rgba(255,255,255,0.1); text-shadow: 0 1px 2px #000;
-        }
+        /* Badges & Camo Styles */
+        .prestige-badge { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 3px; color: #fff; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
         .badge-lvl-water { background: linear-gradient(135deg, #0055ff, #00d2ff); box-shadow: 0 0 6px #0055ff; }
-        .badge-lvl-shock { background: linear-gradient(135deg, #ffcc00, #ff5500); box-shrink: 0; animation: jitter 0.15s infinite alternate; box-shadow: 0 0 6px #ff5500; }
-        
-        /* JOUW GOD-MODE MASTER PRESTIGE BADGE */
-        .badge-lvl-god { 
-            background: linear-gradient(90deg, #ff0055, #ffcc00, #00ffcc, #ff0055); background-size: 300% auto;
-            animation: camoShift 3s linear infinite; font-weight: 900; color: #fff;
-            border: 1px solid #fff; box-shadow: 0 0 12px #00ffcc;
-        }
+        .badge-lvl-shock { background: linear-gradient(135deg, #ffcc00, #ff5500); animation: jitter 0.15s infinite alternate; box-shadow: 0 0 6px #ff5500; }
+        .badge-lvl-god { background: linear-gradient(90deg, #ff0055, #ffcc00, #00ffcc, #ff0055); background-size: 300% auto; animation: camoShift 3s linear infinite; box-shadow: 0 0 12px #00ffcc; border: 1px solid #fff; }
 
-        /* --- EXTREME NAAM CAMO'S EN AURAS --- */
-        .name-txt { font-weight: 900; font-size: 12px; letter-spacing: 0.5px; }
-        
-        /* Water Aura */
-        .camo-water { color: #00d2ff; text-shadow: 0 0 8px rgba(0,210,255,0.6); animation: waveMotion 2s infinite alternate; }
-        /* Bliksem Aura */
-        .camo-shock { color: #ffea00; text-shadow: 0 0 10px #ffea00, 0 0 2px #fff; }
-        
-        /* 👑 JOUW GEANIMEERDE DARK MATTER CAMO + ULTRA AURA */
+        .name-txt { font-weight: 900; font-size: 12px; }
+        .camo-water { color: #00d2ff; text-shadow: 0 0 8px rgba(0,210,255,0.6); }
+        .camo-shock { color: #ffea00; text-shadow: 0 0 10px #ffea00; }
         .camo-pixelgod {
-            background: linear-gradient(90deg, #ff00aa, #7700ff, #00ffcc, #ffbc00, #ff00aa);
-            background-size: 400% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: camoShift 4s linear infinite;
-            filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.8));
-            font-size: 13px; text-transform: uppercase;
+            background: linear-gradient(90deg, #ff00aa, #7700ff, #00ffcc, #ffbc00, #ff00aa); background-size: 400% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: camoShift 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.8)); font-size: 13px; text-transform: uppercase;
         }
 
-        /* Animatie Keyframes */
         @keyframes camoShift { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
-        @keyframes waveMotion { 0% { transform: skewX(-2deg); } 100% { transform: skewX(2deg); } }
         @keyframes jitter { 0% { transform: translateY(0); } 100% { transform: translateY(1px); } }
 
-        .text-normal { color: #94a3b8; font-size: 12px; font-family: 'Segoe UI', sans-serif; font-weight: 500; }
+        .text-normal { color: #94a3b8; font-size: 12px; font-family: 'Segoe UI', sans-serif; }
         .text-gift { font-weight: 900; color: #ffcc00; font-size: 12px; text-shadow: 0 0 8px #ffcc00; }
 
-        /* Compact Gifts Menu */
+        /* Gifts Matrix */
         .gift-title { font-size: 9px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 4px; }
         .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
-        .gift-node { background: #070c18; border: 1px solid rgba(255,255,255,0.03); border-radius: 6px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .gift-node:active { transform: scale(0.92); }
-        .gift-avatar { font-size: 16px; }
+        .gift-node { background: #070c18; border: 1px solid rgba(255,255,255,0.03); border-radius: 6px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.1s; }
+        .gift-node:active { transform: scale(0.9); }
+        .gift-avatar { font-size: 18px; }
         .gift-lbl { font-size: 8px; color: #475569; font-weight: bold; }
         .gift-val { font-size: 8px; font-weight: 900; color: #00ffcc; }
 
-        /* Bottom Command Panel */
+        /* Control Panel Knoppen met Camo Glow */
         .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #050813; padding: 5px; border-radius: 8px; }
         .pot-box { display: flex; flex-direction: column; }
         .pot-lbl { font-size: 7px; color: #475569; font-weight: bold; }
@@ -122,12 +102,26 @@
         .c-blue { color: #00ffcc; } .c-pink { color: #ff0055; }
         
         .action-btn { border: none; padding: 10px 2px; font-weight: 900; font-size: 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; color: #fff; }
-        .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #000; box-shadow: 0 0 10px rgba(0,255,204,0.3); }
-        .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 0 10px rgba(255,0,85,0.3); }
+        .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #000; box-shadow: 0 0 12px rgba(0,255,204,0.4); }
+        .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 0 12px rgba(255,0,85,0.4); }
 
-        /* Fixed Footer Navbar */
+        /* Real-Time Settings Overlay Screen */
+        .settings-screen { 
+            position: absolute; inset: 0; background: rgba(3, 5, 12, 0.98); 
+            z-index: 200; display: none; flex-direction: column; padding: 20px;
+            animation: paneSlide 0.25s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+        @keyframes paneSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .settings-title { font-size: 20px; color: #ff5500; font-style: italic; border-bottom: 2px solid #ff5500; padding-bottom: 8px; margin-bottom: 20px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
+        .setting-lbl { font-size: 12px; font-weight: bold; color: #cbd5e1; }
+        .setting-input { background: #0c1125; border: 1px solid #ff5500; color: #fff; padding: 6px 10px; border-radius: 4px; font-weight: bold; width: 140px; text-align: center; }
+        .close-btn { background: #ff5500; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; }
+
+        /* Navigation Footer */
         .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #03050c; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 9px; font-weight: bold; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 11px; font-weight: bold; cursor: pointer; width: 33%; text-align: center; }
         .nav-link.active-link { color: #ff5500; text-shadow: 0 0 8px #ff5500; }
     </style>
 </head>
@@ -137,145 +131,215 @@
 
     <div class="phone-container" id="shell">
         
+        <canvas id="fxCanvas"></canvas>
+
+        <div class="settings-screen" id="settingsPanel">
+            <div class="settings-title">⚙️ NEXUS CONTROL INTERFACE</div>
+            <div class="setting-row">
+                <span class="setting-lbl">OPERATOR USERNAME</span>
+                <input type="text" class="setting-input" id="cfgUsername" value="grmryzen-pixelGOD">
+            </div>
+            <div class="setting-row">
+                <span class="setting-lbl">STREAMER 1 VOTE POT</span>
+                <input type="number" class="setting-input" id="cfgPotA" value="5240">
+            </div>
+            <div class="setting-row">
+                <span class="setting-lbl">SIMULATE CHAT VELOCITY</span>
+                <select class="setting-input" id="cfgSpeed">
+                    <option value="1500">FAST SPEED</option>
+                    <option value="3000">NORMAL SPEED</option>
+                </select>
+            </div>
+            <button class="close-btn" onclick="toggleSettingsMenu(false)">APPLY ENGINE CONFIG</button>
+        </div>
+
         <div class="app-header">
             <span class="logo-text">NEXUS OPERATOR</span>
-            <div>
-                <div class="owner-cash" id="walletDisplay">WALLET: €150.00</div>
-            </div>
+            <div class="owner-cash" id="walletDisplay">WALLET: €2380.00</div>
         </div>
 
         <div class="view-segment">
             
-            <div class="live-arena-grid">
-                <div class="stream-card active-blue" id="boxA">
-                    <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 8.4K</div>
-                    <div class="profile-title">Marouane_Live</div>
-                    <div class="profile-sub">PRESTIGE MASTER</div>
-                </div>
-                <div class="stream-card" id="boxB">
-                    <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 1.2K</div>
-                    <div class="profile-title">Anas_PvP</div>
-                    <div class="profile-sub">ELITE COMMANDO</div>
-                </div>
-            </div>
-
-            <div class="ratio-bar-container">
-                <div class="track-bar">
-                    <div class="fill-left" id="powerRatioA" style="width: 50%;"></div>
-                    <div class="fill-right"></div>
-                </div>
-            </div>
-
-            <div class="chat-view-master" id="chatFlow">
-                <div class="msg-line" style="border-left-color: #0055ff;">
-                    <div class="msg-meta">
-                        <span class="prestige-badge badge-lvl-water">💧 LVL 15</span>
-                        <span class="name-txt camo-water">SolanaKoning</span>
+            <div class="page-content" id="stagePage">
+                <div class="live-arena-grid">
+                    <div class="stream-card active-blue" id="boxA">
+                        <div class="live-pill">LIVE</div>
+                        <div class="viewer-pill">👁️ 8.4K</div>
+                        <div class="profile-title">Marouane_Live</div>
+                        <div class="profile-sub">PRESTIGE MASTER</div>
                     </div>
-                    <span class="text-normal">Die nieuwe camo's zijn niet normaal broer! 🤯</span>
+                    <div class="stream-card" id="boxB">
+                        <div class="live-pill">LIVE</div>
+                        <div class="viewer-pill">👁️ 1.2K</div>
+                        <div class="profile-title">Anas_PvP</div>
+                        <div class="profile-sub">ELITE COMMANDO</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
-            <div class="gift-row">
-                <div class="gift-node" onclick="dropPrestigeGift('⚡ RC-XD Shock', 10)">
-                    <span class="gift-avatar">⚡</span>
-                    <span class="gift-lbl">RC-XD Shock</span>
-                    <span class="gift-val">€10</span>
+                <div class="ratio-bar-container">
+                    <div class="track-bar">
+                        <div class="fill-left" id="powerRatioA" style="width: 65%;"></div>
+                        <div class="fill-right"></div>
+                    </div>
                 </div>
-                <div class="gift-node" onclick="dropPrestigeGift('🔮 UAV Aura', 25)">
-                    <span class="gift-avatar">🔮</span>
-                    <span class="gift-lbl">UAV Aura</span>
-                    <span class="gift-val">€25</span>
-                </div>
-                <div class="gift-node" onclick="dropPrestigeGift('👑 Chopper Gunner', 50)">
-                    <span class="gift-avatar">👑</span>
-                    <span class="gift-lbl">Chopper VIP</span>
-                    <span class="gift-val">€50</span>
-                </div>
-                <div class="gift-node" onclick="dropPrestigeGift('🚀 Nuke Drop', 100)">
-                    <span class="gift-avatar">🚀</span>
-                    <span class="gift-lbl">MOAB NUKE</span>
-                    <span class="gift-val">€100</span>
-                </div>
-            </div>
 
-            <div class="controls-row">
-                <div class="pot-box">
-                    <span class="pot-lbl">POT 01</span>
-                    <span class="pot-cash c-blue" id="potDisplayA">€4340</span>
+                <div class="chat-view-master" id="chatFlow">
+                    <div class="msg-line" style="border-left-color: #0055ff;">
+                        <div class="msg-meta">
+                            <span class="prestige-badge badge-lvl-water">💧 LVL 14</span>
+                            <span class="name-txt camo-water">Mo_BlackOps</span>
+                        </div>
+                        <span class="text-normal">Zieke stroom effecten bro</span>
+                    </div>
                 </div>
-                <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
-                <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
-                <div class="pot-box" style="text-align: right;">
-                    <span class="pot-lbl">POT 02</span>
-                    <span class="pot-cash c-pink" id="potDisplayB">€360</span>
+
+                <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
+                <div class="gift-row">
+                    <div class="gift-node" onclick="triggerGigaGift('⚡', 'RC-XD Shock', 10)">
+                        <span class="gift-avatar">⚡</span>
+                        <span class="gift-lbl">RC-XD Shock</span>
+                        <span class="gift-val">€10</span>
+                    </div>
+                    <div class="gift-node" onclick="triggerGigaGift('🔮', 'UAV Aura', 25)">
+                        <span class="gift-avatar">🔮</span>
+                        <span class="gift-lbl">UAV Aura</span>
+                        <span class="gift-val">€25</span>
+                    </div>
+                    <div class="gift-node" onclick="triggerGigaGift('👑', 'Chopper VIP', 50)">
+                        <span class="gift-avatar">👑</span>
+                        <span class="gift-lbl">Chopper VIP</span>
+                        <span class="gift-val">€50</span>
+                    </div>
+                    <div class="gift-node" onclick="triggerGigaGift('🚀', 'MOAB NUKE', 100)">
+                        <span class="gift-avatar">🚀</span>
+                        <span class="gift-lbl">MOAB NUKE</span>
+                        <span class="gift-val">€100</span>
+                    </div>
+                </div>
+
+                <div class="controls-row">
+                    <div class="pot-box">
+                        <span class="pot-lbl">POT 01</span>
+                        <span class="pot-cash c-blue" id="potDisplayA">€5240</span>
+                    </div>
+                    <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
+                    <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
+                    <div class="pot-box" style="text-align: right;">
+                        <span class="pot-lbl">POT 02</span>
+                        <span class="pot-cash c-pink" id="potDisplayB">€2760</span>
+                    </div>
                 </div>
             </div>
 
         </div>
 
         <div class="bottom-navbar">
-            <div class="nav-link active-link"><span>STAGE V10</span></div>
-            <div class="nav-link"><span>CONFIG</span></div>
-            <div class="nav-link"><span>STATS</span></div>
+            <div class="nav-link active-link" id="navStage" onclick="switchMainTab('stage')"><span>STAGE</span></div>
+            <div class="nav-link" id="navConfig" onclick="toggleSettingsMenu(true)"><span>CONFIG ⚙️</span></div>
         </div>
 
     </div>
 
     <script {isCodeAccessible=true}>
-        let pA = 4340;
-        let pB = 360;
-        let wallet = 150.00;
+        let pA = 5240;
+        let pB = 2760;
+        let wallet = 2380.00;
+        let particles = [];
 
-        const mockNames = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
-        const mockTexts = ["Gooi die nuke dan!", "Knettert helemaal op m'n scherm", "Team 01 heeft betere camo", "Zieke stroom effecten bro"];
+        const canvas = document.getElementById("fxCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Resize Canvas to device screen size
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Particle System Loop
+        function spawnParticles(emoji, count) {
+            for(let i=0; i<count; i++) {
+                particles.push({
+                    x: canvas.width / 2 + (Math.random() * 100 - 50),
+                    y: canvas.height - 120,
+                    vx: Math.random() * 6 - 3,
+                    vy: -(Math.random() * 5 + 4),
+                    size: Math.random() * 12 + 18,
+                    text: emoji,
+                    alpha: 1
+                });
+            }
+        }
+
+        function updateFXEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.015;
+                
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.font = `${p.size}px Impact`;
+                ctx.fillText(p.text, p.x, p.y);
+                ctx.restore();
+
+                if(p.alpha <= 0) particles.splice(i, 1);
+            }
+            requestAnimationFrame(updateFXEngine);
+        }
+        updateFXEngine();
 
         function triggerImpactFx() {
-            // Screen flash effect
             let flash = document.getElementById("flashFx");
             flash.style.animation = "strikeFlash 0.25s ease-out";
-            
-            // Screen shake container effect
             let container = document.getElementById("shell");
             container.style.animation = "screenShake 0.35s ease-in-out";
+            setTimeout(() => { flash.style.animation = ""; container.style.animation = ""; }, 350);
+        }
+
+        function triggerGigaGift(emoji, giftName, cost) {
+            triggerImpactFx();
+            spawnParticles(emoji, 15); // Knalt 15 vliegende emoji-deeltjes op je scherm!
+            wallet += cost;
+            document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
             
-            setTimeout(() => {
-                flash.style.animation = "";
-                container.style.animation = "";
-            }, 350);
+            let currentOwner = document.getElementById("cfgUsername").value;
+            injectPrestigeChat(currentOwner, `LAUNCHED ULTRA PRESTIGE STREAK: ${emoji} ${giftName.toUpperCase()}!`, true, true);
         }
 
         function sendNodeBoost(target) {
             triggerImpactFx();
             if(target === 'A') {
-                pA += 150;
+                pA += 180;
                 document.getElementById("potDisplayA").innerText = "€" + pA;
                 document.getElementById("boxA").classList.add("active-blue");
                 document.getElementById("boxB").classList.remove("active-pink");
             } else {
-                pB += 150;
+                pB += 180;
                 document.getElementById("potDisplayB").innerText = "€" + pB;
                 document.getElementById("boxB").classList.add("active-pink");
                 document.getElementById("boxA").classList.remove("active-blue");
             }
-            
             let totalSum = pA + pB;
             document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
             
-            injectPrestigeChat("grmryzen-pixelGOD", `COMMITTED €150 BOOST DIRECT OP NODE 0${target === 'A' ? '1' : '2'}! ⚡⚡`, true, false);
-            setTimeout(simulateActiveChat, 400);
+            let currentOwner = document.getElementById("cfgUsername").value;
+            injectPrestigeChat(currentOwner, `OVERLORD SYSTEM ENGAGED. NODE 0${target === 'A' ? '1' : '2'} FUNDED.`, true, false);
         }
 
-        function dropPrestigeGift(giftName, price) {
-            triggerImpactFx();
-            wallet += price;
-            document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
-            
-            injectPrestigeChat("grmryzen-pixelGOD", `DEPLOYED HIGH-END CALLOUT STREAK: ${giftName.toUpperCase()}! 🚀💥`, true, true);
-            setTimeout(simulateActiveChat, 500);
+        function toggleSettingsMenu(show) {
+            let panel = document.getElementById("settingsPanel");
+            panel.style.display = show ? "flex" : "none";
+            if(!show) {
+                // Instellingen toepassen direct in de live engine counters!
+                pA = parseInt(document.getElementById("cfgPotA").value) || pA;
+                document.getElementById("potDisplayA").innerText = "€" + pA;
+                let totalSum = pA + pB;
+                document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
+            }
         }
 
         function injectPrestigeChat(sender, message, isGodMode, isGift) {
@@ -287,7 +351,6 @@
                 element.className = "msg-line owner-line";
                 element.style.borderLeft = "4px solid #00ffcc";
                 element.style.background = "linear-gradient(90deg, rgba(0,255,204,0.1) 0%, transparent 100%)";
-                
                 element.innerHTML = `
                     <div class="msg-meta">
                         <span class="prestige-badge badge-lvl-god">👑 PRESTIGE GOD</span>
@@ -296,7 +359,6 @@
                     <span class="${isGift ? 'text-gift' : 'text-normal'}" style="color: #fff; font-weight: 800;">${message}</span>
                 `;
             } else {
-                // Willekeurige toewijzing van effecten voor kijkers (Water of Stroom)
                 let roll = Math.random() > 0.5;
                 let badgeClass = roll ? "badge-lvl-water" : "badge-lvl-shock";
                 let camoClass = roll ? "camo-water" : "camo-shock";
@@ -311,16 +373,18 @@
                     <span class="text-normal">${message}</span>
                 `;
             }
-
             flow.appendChild(element);
             flow.scrollTop = flow.scrollHeight;
         }
 
-        function simulateActiveChat() {
-            let user = mockNames[Math.floor(Math.random() * mockNames.length)];
-            let txt = mockTexts[Math.floor(Math.random() * mockTexts.length)];
+        // Automatische chat-loop
+        setInterval(() => {
+            const names = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
+            const texts = ["Gooi die nuke dan!", "Knettert helemaal op m'n scherm", "Kijk die deeltjes vliegen wtf", "Zieke stroom effecten bro"];
+            let user = names[Math.floor(Math.random() * names.length)];
+            let txt = texts[Math.floor(Math.random() * texts.length)];
             injectPrestigeChat(user, txt, false, false);
-        }
+        }, 2500);
     </script>
 </body>
 </html>
