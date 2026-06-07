@@ -3,84 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - OVERLORD NETWORK</title>
+    <title>NEXUS - OVERLORD NETWORK V5</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas', 'Courier New', monospace; user-select: none; }
-        body { background-color: #030407; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        body { background-color: #020305; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
         
         /* Telefoon Container */
-        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #07080c; border: 3px solid #141923; border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 60px rgba(255, 0, 85, 0.05); }
+        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #05060a; border: 3px solid #10141d; border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); }
         
         /* Cyber Header */
-        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #111622; background: #07080c; }
+        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0d111a; background: #05060a; z-index: 20; }
         .logo-text { font-size: 24px; font-weight: 900; color: #00ffcc; letter-spacing: 5px; text-shadow: 0 0 10px rgba(0,255,204,0.3); }
         .owner-info-panel { text-align: right; }
         .owner-badge-top { background: #ff0055; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 900; font-size: 10px; letter-spacing: 2px; box-shadow: 0 0 15px rgba(255,0,85,0.4); text-transform: uppercase; border: 1px solid #ff5588; }
         .owner-profit { font-size: 11px; color: #00ffcc; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
 
-        /* Arena */
-        .live-screen { flex: 1; position: relative; background-color: #040508; background-image: linear-gradient(rgba(20, 25, 35, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 25, 35, 0.3) 1px, transparent 1px); background-size: 30px 30px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; }
-        .live-badge { position: absolute; top: 15px; left: 15px; border: 1px solid #ff0055; color: #ff0055; padding: 4px 10px; font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,0,85,0.1); }
+        /* Arena met bewegend Grid-effect */
+        .live-screen { flex: 1; position: relative; background-color: #030407; background-image: linear-gradient(rgba(20, 25, 35, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 25, 35, 0.4) 1px, transparent 1px); background-size: 30px 30px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; transition: transform 0.1s ease-in-out; }
         
-        /* Versus Matrix */
-        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; }
+        /* Bewegende laserlijn op de achtergrond */
+        .live-screen::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(0, 255, 204, 0.03), transparent); animation: scanline 6s linear infinite; pointer-events: none; }
+        @keyframes scanline { 0% { top: -100%; } 100% { top: 100%; } }
+        
+        /* SCREEN SHAKE EFFECT TOEVOEGING */
+        .live-screen.shake { animation: empshake 0.15s infinite; border: 1px solid #ff0055; }
+        @keyframes empshake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .live-badge { position: absolute; top: 15px; left: 15px; border: 1px solid #ff0055; color: #ff0055; padding: 4px 10px; font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,0,85,0.1); z-index: 10; }
+        
+        /* Versus Matrix & Live Power Grid Bar */
+        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 25px; z-index: 10; }
+        .fighters-info { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .creator { display: flex; flex-direction: column; }
         .creator .name { font-weight: 900; font-size: 15px; letter-spacing: 1px; }
-        .creator .sub { font-size: 9px; color: #525966; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
-        .creator-a .name { color: #00ffcc; }
+        .creator .sub { font-size: 9px; color: #434956; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+        .creator-a .name { color: #00ffcc; text-shadow: 0 0 8px rgba(0,255,204,0.2); }
         .creator-b { text-align: right; }
-        .creator-b .name { color: #ff0055; }
-        .vs-sign { background: #0b0f17; border: 1px solid #1a2233; padding: 4px 10px; font-weight: 900; font-size: 11px; color: #525966; }
+        .creator-b .name { color: #ff0055; text-shadow: 0 0 8px rgba(255,0,85,0.2); }
+        .vs-sign { background: #05060a; border: 1px solid #10141d; padding: 4px 10px; font-weight: 900; font-size: 11px; color: #525966; }
+        
+        /* Dynamische Progressiebalk */
+        .power-grid-wrapper { width: 100%; height: 6px; background: #10141d; border-radius: 3px; overflow: hidden; display: flex; border: 1px solid rgba(255,255,255,0.05); }
+        .grid-bar-a { width: 50%; height: 100%; background: #00ffcc; box-shadow: 0 0 10px #00ffcc; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .grid-bar-b { flex: 1; height: 100%; background: #ff0055; box-shadow: 0 0 10px #ff0055; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
         /* Tactical Chat Box */
-        .live-chat { max-height: 260px; overflow-y: hidden; display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; z-index: 5; }
-        .chat-msg { background: rgba(11, 15, 23, 0.9); padding: 10px 14px; border-radius: 4px; font-size: 12px; border: 1px solid #141923; display: flex; flex-direction: column; gap: 5px; }
+        .live-chat { max-height: 280px; overflow-y: hidden; display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; z-index: 5; }
+        .chat-msg { background: rgba(8, 10, 15, 0.95); padding: 12px 14px; border-radius: 4px; font-size: 12px; border: 1px solid #10141d; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.2s; }
         
-        /* THE LOCKDOWN: Owner Chat Box Styling */
+        /* THE LOCKDOWN: Owner Chat Box */
         .msg-owner {
-            background: linear-gradient(90deg, rgba(255,0,85,0.15) 0%, rgba(11,15,23,0.95) 100%) !important;
+            background: linear-gradient(90deg, rgba(255,0,85,0.18) 0%, rgba(5,6,10,0.98) 100%) !important;
             border: 1px solid #ff0055 !important;
-            box-shadow: 0 0 20px rgba(255,0,85,0.2);
+            box-shadow: 0 0 25px rgba(255,0,85,0.3);
             position: relative;
         }
         .msg-owner::before {
             content: 'SYSTEM LOCKDOWN';
             position: absolute;
-            right: 10px;
-            top: 4px;
+            right: 12px;
+            top: 5px;
             font-size: 7px;
-            color: rgba(255,0,85,0.5);
-            letter-spacing: 1px;
+            color: rgba(255,0,85,0.7);
+            letter-spacing: 1.5px;
             font-weight: 900;
         }
         
-        /* Professional Badges (No Emojis) */
+        /* Badges */
         .badge-row { display: flex; align-items: center; gap: 8px; }
         .prestige-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase; }
         
-        /* 10 Prestige Tiers Custom CSS */
-        .p-tier-1 { background: #3b4252; color: #d8dee9; }
-        .p-tier-2 { background: #4c566a; color: #eceff4; }
-        .p-tier-3 { background: #4f5b47; color: #a3be8c; }
-        .p-tier-4 { background: #2b4366; color: #81a1c1; }
-        .p-tier-5 { background: #005f5f; color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
-        .p-tier-6 { background: #4c3b66; color: #b48ead; }
-        .p-tier-7 { background: #1f4c40; color: #8fbcbb; }
-        .p-tier-8 { background: rgba(255,0,85,0.2); color: #ff0055; border: 1px solid #ff0055; }
-        .p-tier-9 { background: #5e4a2b; color: #ebcb8b; }
-        /* Tier 10: Absolute Max Power */
+        /* 10 Prestige Tiers */
+        .p-tier-1 { background: #2e3440; color: #d8dee9; border: 1px solid #434c5e; }
+        .p-tier-2 { background: #3b4252; color: #eceff4; border: 1px solid #4c566a; }
+        .p-tier-3 { background: #3b4432; color: #a3be8c; border: 1px solid #4f5b47; }
+        .p-tier-4 { background: #1f3047; color: #81a1c1; border: 1px solid #2b4366; }
+        .p-tier-5 { background: #004444; color: #00ffcc; border: 1px solid #005f5f; }
+        .p-tier-6 { background: #372b47; color: #b48ead; border: 1px solid #4c3b66; }
+        .p-tier-7 { background: #13332b; color: #8fbcbb; border: 1px solid #1f4c40; }
+        .p-tier-8 { background: rgba(255,0,85,0.15); color: #ff0055; border: 1px solid #ff0055; }
+        .p-tier-9 { background: #42341e; color: #ebcb8b; border: 1px solid #5e4a2b; }
         .p-tier-10 { 
             background: #000000; 
             color: #ff0055; 
             border: 1px solid #00ffcc; 
             box-shadow: 0 0 10px #ff0055, inset 0 0 5px #00ffcc;
             font-weight: 900;
-            animation: glitchBorder 2s infinite alternate;
         }
 
         /* Gevaarlijke Naam Skins */
-        .name-user { font-weight: 700; color: #8892b0; }
-        .name-high { color: #00ffcc; font-weight: 800; }
+        .name-user { font-weight: 700; color: #707a94; }
+        .name-high { color: #00ffcc; font-weight: 800; text-shadow: 0 0 5px rgba(0,255,204,0.2); }
         
         /* Owner Name Skin: VOID ECLIPSE */
         .name-owner {
@@ -96,23 +121,23 @@
             100% { text-shadow: 2px 1px 0 #ff0055, -2px -1px 0 #00ffcc; }
         }
         
-        .chat-msg .text { color: #ccd6f6; line-height: 1.4; font-size: 11px; }
+        .chat-msg .text { color: #acb4c9; line-height: 1.4; font-size: 11px; }
 
         /* Tactical Knoppen */
-        .action-area { padding: 25px; background-color: #07080c; border-top: 2px solid #111622; }
+        .action-area { padding: 25px; background-color: #05060a; border-top: 2px solid #0d111a; z-index: 20; }
         .pool-stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .pool-box { display: flex; flex-direction: column; gap: 4px; }
         .pool-box.right { align-items: flex-end; }
-        .pool-label { font-size: 9px; color: #434956; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        .pool-label { font-size: 9px; color: #3b414c; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
         .pool-amount { font-size: 22px; font-weight: 900; color: #fff; }
-        #amount-a { color: #00ffcc; }
-        #amount-b { color: #ff0055; }
+        #amount-a { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.2); }
+        #amount-b { color: #ff0055; text-shadow: 0 0 10px rgba(255,0,85,0.2); }
         
         .btn-container { display: flex; gap: 12px; }
         .btn { flex: 1; padding: 16px; border: 1px solid transparent; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; transition: 0.1s; }
-        .btn-a { background: rgba(0,255,204,0.1); color: #00ffcc; border-color: #00ffcc; }
-        .btn-b { background: rgba(255,0,85,0.1); color: #ff0055; border-color: #ff0055; }
-        .btn:active { transform: scale(0.98); background: #fff; color: #000; }
+        .btn-a { background: rgba(0,255,204,0.04); color: #00ffcc; border-color: #00ffcc; box-shadow: inset 0 0 10px rgba(0,255,204,0.1); }
+        .btn-b { background: rgba(255,0,85,0.04); color: #ff0055; border-color: #ff0055; box-shadow: inset 0 0 10px rgba(255,0,85,0.1); }
+        .btn:active { transform: scale(0.97); background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
     </style>
 </head>
 <body>
@@ -122,22 +147,28 @@
             <span class="logo-text">NEXUS</span>
             <div class="owner-info-panel">
                 <span class="owner-badge-top">PRSTG X MASTER</span>
-                <div class="owner-profit" id="profitDisplay">NET_WORTH: €0.00</div>
+                <div class="owner-profit" id="profitDisplay">NET_WORTH: €100.00</div>
             </div>
         </div>
 
-        <div class="live-screen">
+        <div class="live-screen" id="liveArena">
             <div class="live-badge">NET_STREAM // PvP</div>
             
             <div class="versus-bar">
-                <div class="creator creator-a">
-                    <span class="name">Marouane_Live</span>
-                    <span class="sub">NODE_01 // SEC_LEADER</span>
+                <div class="fighters-info">
+                    <div class="creator creator-a">
+                        <span class="name">Marouane_Live</span>
+                        <span class="sub">NODE_01 // SEC_LEADER</span>
+                    </div>
+                    <div class="vs-sign">VS</div>
+                    <div class="creator creator-b">
+                        <span class="name">Anas_PvP</span>
+                        <span class="sub">NODE_02 // STRIKER</span>
+                    </div>
                 </div>
-                <div class="vs-sign">VS</div>
-                <div class="creator creator-b">
-                    <span class="name">Anas_PvP</span>
-                    <span class="sub">NODE_02 // STRIKER</span>
+                <div class="power-grid-wrapper">
+                    <div class="grid-bar-a" id="gridBarA" style="width: 86%;"></div>
+                    <div class="grid-bar-b" id="gridBarB"></div>
                 </div>
             </div>
 
@@ -180,12 +211,17 @@
     <script>
         let potA = 9250;
         let potB = 1480;
-        let platformWinst = 0.00;
+        let platformWinst = 100.00;
 
         const rNamen = ["SolanaKoning", "Tarifit_G", "CryptoStrijder", "Knaap_PvP", "NXT_Lvl", "Alpha_Op", "DeltaHost"];
-        // 10 Verskillende Prestige Tiers gekoppeld aan de CSS
         const rTiers = ["p-tier-1", "p-tier-2", "p-tier-3", "p-tier-4", "p-tier-5", "p-tier-6", "p-tier-7", "p-tier-8", "p-tier-9"];
         const rTeksten = ["Matrix gecrasht door die klap.", "Dikke volumes rollen hier binnen.", "Systeem draait op max.", "Verhoog die inzet direct."];
+
+        function updatePowerGrid() {
+            let totaal = potA + potB;
+            let percentageA = (potA / totaal) * 100;
+            document.getElementById("gridBarA").style.width = percentageA + "%";
+        }
 
         function supportCreator(team) {
             let inzet = 250; 
@@ -193,6 +229,11 @@
             platformWinst += fee;
             
             document.getElementById("profitDisplay").innerText = "NET_WORTH: €" + platformWinst.toFixed(2);
+            
+            // Activeer de screen shake
+            let arena = document.getElementById("liveArena");
+            arena.classList.add("shake");
+            setTimeout(() => { arena.classList.remove("shake"); }, 300);
             
             if(team === 'A') {
                 potA += inzet;
@@ -204,21 +245,20 @@
                 voegChatToe("grmryzen-pixelGOD", "OVERLORD SYSTEM ENGAGED. NODE_02 FUNDED.", "p-tier-10", true);
             }
             
-            setTimeout(simuleerPubliekChat, 400);
+            updatePowerGrid();
+            setTimeout(simuleerPubliekChat, 500);
         }
 
         function voegChatToe(naam, tekst, tierClass, isOwner = false) {
             let chatContainer = document.getElementById("chatContainer");
             let msg = document.createElement("div");
             
-            // Pas de specifieke lockdown class toe als de owner typt
             if(isOwner) {
                 msg.className = "chat-msg msg-owner";
                 tierName = "PRSTG X // OWNER";
                 nameClass = "name-owner";
             } else {
                 msg.className = "chat-msg";
-                // Bereken Romeinse cijfers op basis van de willekeurige tier voor de show
                 let tierNum = tierClass.split('-')[2];
                 let romanArray = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
                 tierName = "PRSTG " + romanArray[tierNum - 1];
@@ -244,6 +284,9 @@
             
             voegChatToe(naam, tekst, tier, false);
         }
+
+        // Initiele balk stand zetten
+        updatePowerGrid();
     </script>
 
 </body>
