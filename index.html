@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS LIVE ELITE</title>
+    <title>NEXUS LIVE ULTRA PRESTIGE</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
         body { background-color: #06070d; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
@@ -41,19 +41,75 @@
         .badge-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .rank-tag { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; }
         
-        /* Ranks & Kleuren */
+        /* Ranks */
         .rank-owner { background: linear-gradient(135deg, #ffe066, #f5b041); color: #000; box-shadow: 0 0 8px rgba(245,176,65,0.5); font-weight: 900; }
         .rank-legend { background: linear-gradient(135deg, #b000ff, #ff00b8); color: #fff; box-shadow: 0 0 8px rgba(176,0,255,0.4); }
         .rank-immortal { background: linear-gradient(135deg, #ff3333, #ff0055); color: #fff; }
         .rank-diamond { background: linear-gradient(135deg, #00ffff, #0088ff); color: #000; }
         .rank-noob { background: #2e3440; color: #d8dee9; }
 
-        .name-owner { color: #f5b041 !important; font-weight: 900; text-shadow: 0 0 8px rgba(245,176,65,0.3); }
-        .name-legend { color: #d946ef !important; font-weight: 800; }
-        .name-immortal { color: #ff4545 !important; font-weight: 800; }
-        .name-diamond { color: #38bdf8 !important; font-weight: 800; }
+        /* NAAM SKINS & EFFECTEN (The Real Work) */
         
-        .chat-msg .user-name { font-weight: 800; color: #fff; }
+        /* Owner: Rainbow Pulsar Skin */
+        .name-owner {
+            background-image: linear-gradient(to left, #f5b041, #ffe066, #00ffcc, #ff0055, #f5b041);
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: rainbowFlow 6s linear infinite;
+            filter: drop-shadow(0 0 5px rgba(245,176,65,0.6));
+        }
+        @keyframes rainbowFlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        /* Legend: Electrified Plasma Skin */
+        .name-legend {
+            color: #fff;
+            font-weight: 800;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #d946ef, 0 0 20px #d946ef, 0 0 25px #d946ef;
+            animation: plasmaPulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes plasmaPulse {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #d946ef; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #ff00b8; }
+        }
+
+        /* Immortal: Crimson Fire Skin */
+        .name-immortal {
+            color: #ff3333;
+            font-weight: 800;
+            text-shadow: 0 1px #800, 0 0 5px #ff4545, 0 -1px 3px #ff4545;
+            animation: fireFlicker 2s infinite;
+        }
+        @keyframes fireFlicker {
+            0% { text-shadow: 0 0 5px #ff4545; }
+            50% { text-shadow: 0 0 8px #ff4545, 0 -2px 5px #f54; }
+            100% { text-shadow: 0 0 5px #ff4545; }
+        }
+
+        /* Diamond: Ice Crystal Skin */
+        .name-diamond {
+            color: #00ffff;
+            font-weight: 800;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #38bdf8, 0 0 15px #38bdf8;
+            background: linear-gradient(135deg, #00ffff 30%, #fff 50%, #00ffff 70%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: iceShine 3s linear infinite;
+        }
+        @keyframes iceShine {
+            0% { background-position: -100% 0%; }
+            100% { background-position: 100% 0%; }
+        }
+        
         .chat-msg .text { color: #e2e8f0; line-height: 1.4; }
 
         /* Actie Knoppen */
@@ -84,7 +140,7 @@
     <div class="phone-container">
         <div class="level-popup" id="levelUpAlert">
             <h2>⚡ PRESTIGE UP </h2>
-            <p id="levelPopupText">Jouw Eigenaars Level stijgt naar 100!</p>
+            <p id="levelPopupText">grmryzen-pixelGOD stijgt naar Level 100!</p>
         </div>
 
         <div class="app-header">
@@ -132,7 +188,7 @@
             <div class="pool-stats">
                 <div class="pool-box">
                     <span class="pool-label">Pot Marouane</span>
-                    <span class="pool-amount" id="amount-a">€4040</span>
+                    <span class="pool-amount" id="amount-a">€4340</span>
                 </div>
                 <div class="pool-box right">
                     <span class="pool-label">Pot Anas</span>
@@ -147,7 +203,7 @@
     </div>
 
     <script>
-        let potA = 4040;
+        let potA = 4340;
         let potB = 360;
         let platformWinst = 0.00;
         let eigenXP = 0;
@@ -159,7 +215,7 @@
         const rTekstenB = ["Team Anas sowieso!", "Anas gaat de hele pot kapotslaan", "💀 Broer Anas is te gevaarlijk"];
 
         function supportCreator(team) {
-            let inzet = 100; // Dikker bedrag per klik
+            let inzet = 150; // Nóg dikker bedrag per klik
             let fee = inzet * 0.20; 
             platformWinst += fee;
             eigenXP += 35; 
@@ -169,11 +225,11 @@
             if(team === 'A') {
                 potA += inzet;
                 document.getElementById("amount-a").innerText = "€" + potA;
-                voegChatToe("Jij (Eigenaar)", randomElement(rTekstenA), "owner");
+                voegChatToe("grmryzen-pixelGOD", randomElement(rTekstenA), "owner");
             } else {
                 potB += inzet;
                 document.getElementById("amount-b").innerText = "€" + potB;
-                voegChatToe("Jij (Eigenaar)", randomElement(rTekstenB), "owner");
+                voegChatToe("grmryzen-pixelGOD", randomElement(rTekstenB), "owner");
             }
 
             if (eigenXP >= 100) {
@@ -182,12 +238,12 @@
                 document.getElementById("ownerLvlDisplay").innerText = "👑 OWNER LVL " + eigenLevel;
                 
                 let popup = document.getElementById("levelUpAlert");
-                document.getElementById("levelPopupText").innerText = "Jouw Eigenaars Level stijgt naar " + eigenLevel + "!";
+                document.getElementById("levelPopupText").innerText = "grmryzen-pixelGOD stijgt naar Level " + eigenLevel + "!";
                 popup.classList.add("show");
                 setTimeout(() => popup.classList.remove("show"), 2000);
             }
             
-            setTimeout(simuleerPubliekChat, 500);
+            setTimeout(simuleerPubliekChat, 600);
         }
 
         function voegChatToe(naam, tekst, rank) {
