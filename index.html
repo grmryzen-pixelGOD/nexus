@@ -3,135 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS - ULTRA V12</title>
+    <title>NEXUS - GOD MODE V13</title>
     <style>
-        /* Base Cyber Reset */
+        :root {
+            --neon-orange: #ff5500;
+            --neon-cyan: #00ffcc;
+            --neon-pink: #ff0055;
+            --dark-core: #020308;
+            --panel-bg: #060a17;
+            --water-glow: #00d2ff;
+            --volt-glow: #ffea00;
+            --magma-glow: #ff3300;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Segoe UI', sans-serif; user-select: none; }
-        body { background: #010206; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        body { background: #000; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* Perfect Fit Phone Container */
+        /* Mobile Container Grid Layout */
         .phone-container { 
-            width: 100%; max-width: 420px; height: 100vh; background: #04060f; 
+            width: 100%; max-width: 420px; height: 100vh; background: var(--dark-core); 
             display: flex; flex-direction: column; position: relative; overflow: hidden;
-            border: 2px solid #111827; box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            border: 2px solid #111827; box-shadow: 0 0 60px rgba(0,0,0,1);
         }
 
-        /* Scherm Flits & Shake */
+        /* FX Overdrive Class switcher via JS */
+        .fx-disabled * { animation: none !important; text-shadow: none !important; box-shadow: none !important; filter: none !important; }
+
+        /* Canvas Particle Layer */
+        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 900; }
+
+        /* Master Impact Overlays */
         .flash-overlay { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 999; }
-        @keyframes strikeFlash { 0% { opacity: 0; } 15% { opacity: 0.6; } 30% { opacity: 0; } }
-        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 20% { transform: translate(-4px, 3px); } 60% { transform: translate(4px, -2px); } 80% { transform: translate(2px, 2px); } }
+        @keyframes strikeFlash { 0% { opacity: 0; } 10% { opacity: 0.8; } 100% { opacity: 0; } }
+        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 10% { transform: translate(-6px, 5px) rotate(-1deg); } 30% { transform: translate(6px, -4px) rotate(1deg); } 50% { transform: translate(-3px, -3px); } 70% { transform: translate(3px, 2px); } }
 
-        /* Giga Gift Alert Banner Overlay */
-        .gift-alert-banner {
-            position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            width: 90%; background: linear-gradient(135deg, #ff5500, #ff0055);
-            padding: 15px; border-radius: 8px; text-align: center; z-index: 500;
-            box-shadow: 0 0 30px #ff0055; border: 2px solid #fff; pointer-events: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* 🚀 BRUTE KILLSTREAK DROP BANNER */
+        .killstreak-banner {
+            position: absolute; top: -150px; left: 5%; width: 90%; background: linear-gradient(180deg, #0f0202 0%, #4a0000 100%);
+            border: 3px solid var(--neon-pink); border-radius: 4px; padding: 16px; text-align: center; z-index: 950;
+            box-shadow: 0 0 40px var(--neon-pink), inset 0 0 20px #000; pointer-events: none;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; opacity: 0;
         }
-        .gift-alert-banner.show-alert { transform: translate(-50%, -50%) scale(1); }
-        .gift-alert-title { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
-        .gift-alert-sub { font-size: 12px; color: #ffcc00; font-weight: bold; margin-top: 4px; }
+        .killstreak-banner.active-banner { top: 25%; opacity: 1; animation: bannerPulse 0.5s infinite alternate; }
+        .ks-title { font-size: 26px; color: #fff; letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-pink); text-transform: uppercase; }
+        .ks-sub { font-size: 13px; color: #ffcc00; font-weight: bold; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px; margin-top: 4px; }
+        @keyframes bannerPulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); border-color: #fff; } }
 
-        /* Canvas voor de Vliegende Deeltjes (Gift FX) */
-        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 400; }
+        /* Military Pro Header */
+        .app-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: #05070f; border-bottom: 2px solid var(--neon-orange); z-index: 10; }
+        .logo-text { font-size: 26px; font-weight: 900; font-style: italic; color: var(--neon-orange); letter-spacing: 3px; text-shadow: 0 0 15px rgba(255,85,0,0.6); }
+        .owner-cash { font-size: 13px; color: var(--neon-cyan); font-weight: bold; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
 
-        /* Header */
-        .app-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #070a14; border-bottom: 2px solid #ff5500; }
-        .logo-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ff5500; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.5); }
-        .owner-cash { font-size: 12px; color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,204,0.4); }
-
-        /* Workspace Grid Layout */
+        /* Workspace Grid */
         .view-segment { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px; padding-bottom: 65px; }
 
-        /* Arena Vakken */
+        /* 1vs1 Stream Feeds met Scanline Shader */
         .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
         .stream-card { 
-            background: #090e1f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); 
-            position: relative; height: 110px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 6px; 
+            background: #080c1a; border-radius: 6px; border: 1px solid rgba(255,255,255,0.04); 
+            position: relative; height: 115px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; 
         }
-        .stream-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, #04060f 100%); z-index: 1; }
-        .stream-card.active-blue { border-color: #00ffcc; box-shadow: 0 0 15px #00ffcc; }
-        .stream-card.active-pink { border-color: #ff0055; box-shadow: 0 0 15px #ff0055; }
+        .stream-card::before {
+            content: " "; display: block; position: absolute; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 4px, 6px 100%; pointer-events: none;
+        }
+        .stream-card.active-blue { border-color: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); }
+        .stream-card.active-pink { border-color: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
         
-        .live-pill { position: absolute; top: 6px; left: 6px; background: #ff0055; color: #fff; font-size: 8px; padding: 2px 5px; border-radius: 3px; z-index: 2; font-weight: bold; }
-        .viewer-pill { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.6); font-size: 8px; padding: 2px 5px; border-radius: 3px; z-index: 2; }
-        .profile-title { font-size: 13px; font-weight: 900; z-index: 2; }
-        .profile-sub { font-size: 9px; color: #ff5500; font-weight: bold; z-index: 2; }
+        .live-pill { position: absolute; top: 6px; left: 6px; background: var(--neon-pink); color: #fff; font-size: 8px; padding: 2px 6px; border-radius: 2px; z-index: 3; font-weight: bold; box-shadow: 0 0 8px var(--neon-pink); }
+        .viewer-pill { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.7); font-size: 8px; padding: 2px 6px; border-radius: 2px; z-index: 3; border: 1px solid rgba(255,255,255,0.1); }
+        .profile-title { font-size: 14px; font-weight: 900; z-index: 3; letter-spacing: 0.5px; }
+        .profile-sub { font-size: 9px; color: var(--neon-orange); font-weight: bold; z-index: 3; font-family: 'Segoe UI', sans-serif; }
 
-        /* Ratio bar */
-        .ratio-bar-container { background: #080c16; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; }
-        .track-bar { width: 100%; height: 6px; background: #161d31; border-radius: 2px; overflow: hidden; display: flex; }
-        .fill-left { width: 65%; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; transition: width 0.3s ease; }
-        .fill-right { flex: 1; background: #ff0055; box-shadow: 0 0 8px #ff0055; }
+        /* Loeistrakke Cubic Bezier Ratio Bar */
+        .ratio-bar-container { background: #050812; padding: 4px 6px; border-radius: 4px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.02); }
+        .track-bar { width: 100%; height: 8px; background: #111628; border-radius: 2px; overflow: hidden; display: flex; }
+        .fill-left { width: 65%; background: linear-gradient(90deg, #0055ff, var(--neon-cyan)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1); }
+        .fill-right { flex: 1; background: linear-gradient(90deg, var(--neon-pink), #aa00ff); box-shadow: 0 0 10px var(--neon-pink); }
 
-        /* Chat Engine */
+        /* Chat Frame */
         .chat-view-master { 
-            flex: 1; background: rgba(3, 5, 11, 0.95); border-radius: 10px; 
-            border: 1px solid rgba(255,255,255,0.03); padding: 8px; 
+            flex: 1; background: rgba(3, 4, 10, 0.97); border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.02); padding: 8px; 
             display: flex; flex-direction: column; gap: 6px; overflow-y: auto; 
-            margin-bottom: 6px; min-height: 140px;
+            margin-bottom: 8px; min-height: 140px;
         }
+        .msg-line { display: flex; flex-direction: column; padding: 6px 10px; border-radius: 4px; background: rgba(255,255,255,0.01); border-left: 3px solid var(--neon-orange); }
+        .msg-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
 
-        .msg-line { display: flex; flex-direction: column; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.01); border-left: 3px solid #ff5500; }
-        .msg-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+        /* --- NEXT-LEVEL PRO GAMING INSIGNES (BADGES) --- */
+        .prestige-badge { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; color: #fff; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); box-shadow: inset 0 0 4px rgba(0,0,0,0.6); }
+        .badge-lvl-water { background: linear-gradient(135deg, #0033aa, var(--water-glow)); }
+        .badge-lvl-shock { background: linear-gradient(135deg, #b38f00, var(--volt-glow)); animation: microJitter 0.1s infinite; }
+        .badge-lvl-magma { background: linear-gradient(135deg, #880000, var(--magma-glow)); animation: magmaPulse 1s infinite alternate; }
         
-        /* Badges & Camo Styles */
-        .prestige-badge { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 3px; color: #fff; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
-        .badge-lvl-water { background: linear-gradient(135deg, #0055ff, #00d2ff); box-shadow: 0 0 6px #0055ff; }
-        .badge-lvl-shock { background: linear-gradient(135deg, #ffcc00, #ff5500); animation: jitter 0.15s infinite alternate; box-shadow: 0 0 6px #ff5500; }
-        .badge-lvl-god { background: linear-gradient(90deg, #ff0055, #ffcc00, #00ffcc, #ff0055); background-size: 300% auto; animation: camoShift 3s linear infinite; box-shadow: 0 0 12px #00ffcc; border: 1px solid #fff; }
-
-        .name-txt { font-weight: 900; font-size: 12px; }
-        .camo-water { color: #00d2ff; text-shadow: 0 0 8px rgba(0,210,255,0.6); }
-        .camo-shock { color: #ffea00; text-shadow: 0 0 10px #ffea00; }
-        .camo-pixelgod {
-            background: linear-gradient(90deg, #ff00aa, #7700ff, #00ffcc, #ffbc00, #ff00aa); background-size: 400% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: camoShift 4s linear infinite;
-            filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.8)); font-size: 13px; text-transform: uppercase;
+        /* 👑 ILLEGALE SERVER OVERLORD BADGE CHROOM */
+        .badge-lvl-god { 
+            background: linear-gradient(90deg, #fff 0%, #ffd700 50%, #fff 100%); background-size: 200% auto;
+            animation: chromeScan 1.5s linear infinite; color: #000; font-weight: 900;
+            border: 1px solid #fff; box-shadow: 0 0 15px var(--neon-cyan); letter-spacing: 1px;
         }
 
-        @keyframes camoShift { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
-        @keyframes jitter { 0% { transform: translateY(0); } 100% { transform: translateY(1px); } }
+        /* --- EXTREME CHROMATIC CAMO ENGRAVINGS --- */
+        .name-txt { font-weight: 900; font-size: 13px; letter-spacing: 0.5px; }
+        .camo-water { color: var(--water-glow); text-shadow: 0 0 8px rgba(0,210,255,0.5); animation: waterWave 3s ease-in-out infinite alternate; }
+        .camo-shock { color: var(--volt-glow); text-shadow: 0 0 12px var(--volt-glow); animation: microJitter 0.15s infinite; }
+        .camo-magma { color: #ff5555; text-shadow: 0 0 10px var(--magma-glow); background: linear-gradient(90deg, #ff0000, #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* 👑 JOUW MULTI-LAYERED CYBERPUNK GLITCH & DARK MATTER CAMO */
+        .camo-pixelgod {
+            background: linear-gradient(90deg, #ff0077, #7700ff, var(--neon-cyan), #ffbc00, #ff0077); background-size: 300% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: camoShift 2s linear infinite;
+            filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.9)); font-size: 14px; text-transform: uppercase;
+            position: relative;
+        }
+        .camo-pixelgod::after {
+            content: attr(data-text); position: absolute; left: 2px; text-shadow: -1px 0 #ff0055;
+            top: 0; color: rgba(255,255,255,0.1); overflow: hidden; clip: rect(0,900px,0,0); 
+            animation: cyberGlitch 2s infinite linear alternate-reverse;
+        }
 
-        .text-normal { color: #94a3b8; font-size: 12px; font-family: 'Segoe UI', sans-serif; }
-        .text-gift { font-weight: 900; color: #ffcc00; font-size: 12px; text-shadow: 0 0 8px #ffcc00; }
+        /* Pure CSS Performance Keyframes */
+        @keyframes camoShift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+        @keyframes chromeScan { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        @keyframes microJitter { 0% { transform: translate(0.5px, 0.5px); } 100% { transform: translate(-0.5px, -0.5px); } }
+        @keyframes magmaPulse { 0% { filter: brightness(1); } 100% { filter: brightness(1.5); } }
+        @keyframes waterWave { 0% { transform: skewX(-3deg); } 100% { transform: skewX(3deg); } }
+        @keyframes cyberGlitch { 0% { clip: rect(12px, 9999px, 66px, 0); } 100% { clip: rect(34px, 9999px, 55px, 0); } }
 
-        /* Gifts Matrix */
-        .gift-title { font-size: 9px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 4px; }
-        .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
-        .gift-node { background: #070c18; border: 1px solid rgba(255,255,255,0.03); border-radius: 6px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.1s; }
+        .text-normal { color: #cbd5e1; font-size: 12px; font-family: 'Segoe UI', sans-serif; font-weight: 500; }
+        .text-gift { font-weight: 900; color: #ffea00; font-size: 13px; text-shadow: 0 0 10px #ffea00; text-transform: uppercase; }
+
+        /* Gifts Command Panel Grid */
+        .gift-title { font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px; }
+        .gift-node { background: #070b18; border: 1px solid rgba(255,255,255,0.03); border-radius: 4px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
         .gift-node:active { transform: scale(0.9); }
-        .gift-avatar { font-size: 18px; }
-        .gift-lbl { font-size: 8px; color: #475569; font-weight: bold; }
-        .gift-val { font-size: 8px; font-weight: 900; color: #00ffcc; }
+        .gift-avatar { font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
+        .gift-lbl { font-size: 8px; color: #64748b; font-weight: bold; margin-top: 2px; }
+        .gift-val { font-size: 9px; font-weight: 900; color: var(--neon-cyan); }
 
-        /* Control Panel */
-        .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #050813; padding: 5px; border-radius: 8px; }
+        /* Action Node Footers */
+        .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #040712; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.02); }
         .pot-box { display: flex; flex-direction: column; }
         .pot-lbl { font-size: 7px; color: #475569; font-weight: bold; }
-        .pot-cash { font-size: 12px; font-weight: 900; }
-        .c-blue { color: #00ffcc; } .c-pink { color: #ff0055; }
+        .pot-cash { font-size: 13px; font-weight: 900; }
+        .c-blue { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0,255,204,0.3); } 
+        .c-pink { color: var(--neon-pink); text-shadow: 0 0 6px rgba(255,0,85,0.3); }
         
-        .action-btn { border: none; padding: 10px 2px; font-weight: 900; font-size: 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; color: #fff; }
-        .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #000; box-shadow: 0 0 12px rgba(0,255,204,0.4); }
-        .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 0 12px rgba(255,0,85,0.4); }
+        .action-btn { border: none; padding: 12px 2px; font-weight: 900; font-size: 11px; border-radius: 4px; cursor: pointer; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
+        .btn-blue { background: linear-gradient(135deg, var(--neon-cyan), #0055ff); color: #000; box-shadow: 0 0 14px rgba(0,255,204,0.3); }
+        .btn-pink { background: linear-gradient(135deg, var(--neon-pink), #7700ff); box-shadow: 0 0 14px rgba(255,0,85,0.3); }
 
-        /* Werkend Settings Panel Screen Overlay */
+        /* ⚙️ FULL-SCREEN MILITARY SETTINGS OVERLAY */
         .settings-screen { 
-            position: absolute; inset: 0; background: rgba(3, 5, 12, 0.98); 
-            z-index: 800; display: none; flex-direction: column; padding: 20px;
+            position: absolute; inset: 0; background: rgba(2, 3, 7, 0.99); 
+            z-index: 995; display: none; flex-direction: column; padding: 24px;
         }
-        .settings-title { font-size: 18px; color: #ff5500; font-style: italic; border-bottom: 2px solid #ff5500; padding-bottom: 6px; margin-bottom: 20px; letter-spacing: 1px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
-        .setting-lbl { font-size: 12px; font-weight: bold; color: #cbd5e1; }
-        .setting-input { background: #0c1125; border: 1px solid #ff5500; color: #fff; padding: 6px; border-radius: 4px; font-weight: bold; width: 140px; text-align: center; font-size: 12px; }
-        .close-btn { background: linear-gradient(135deg, #ff5500, #ff0055); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; box-shadow: 0 0 15px rgba(255,85,0,0.4); }
+        .settings-title { font-size: 22px; color: var(--neon-orange); font-style: italic; border-bottom: 2px solid var(--neon-orange); padding-bottom: 8px; margin-bottom: 24px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.4); }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.04); }
+        .setting-lbl { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .setting-input { background: #090e1f; border: 1px solid var(--neon-orange); color: #fff; padding: 8px; border-radius: 4px; font-weight: bold; width: 160px; text-align: center; font-size: 13px; outline: none; }
+        .setting-input:focus { border-color: #fff; box-shadow: 0 0 8px var(--neon-orange); }
+        
+        /* Premium Custom Toggle Switch */
+        .switch-box { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch-box input { opacity: 0; width: 0; height: 0; }
+        .slider-chk { position: absolute; cursor: pointer; inset: 0; background-color: #1e293b; transition: .3s; border-radius: 24px; }
+        .slider-chk:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider-chk { background-color: var(--neon-cyan); }
+        input:checked + .slider-chk:before { transform: translateX(22px); }
 
-        /* Navigation Footer Navbar */
-        .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #03050c; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 11px; font-weight: bold; cursor: pointer; width: 50%; text-align: center; }
-        .nav-link.active-link { color: #ff5500; text-shadow: 0 0 8px #ff5500; }
+        .close-btn { background: linear-gradient(90deg, var(--neon-orange), var(--neon-pink)); color: #fff; border: none; padding: 14px; border-radius: 4px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,85,0,0.3); }
+
+        /* Structural Fixed Footer Links */
+        .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #02040a; border-top: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 12px; font-weight: bold; cursor: pointer; width: 50%; text-align: center; height: 100%; justify-content: center; transition: 0.2s; }
+        .nav-link.active-link { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); background: rgba(255,85,0,0.02); }
     </style>
 </head>
 <body>
@@ -142,34 +191,42 @@
         
         <canvas id="fxCanvas"></canvas>
 
-        <div class="gift-alert-banner" id="alertBanner">
-            <div class="gift-alert-title" id="alertTitle">STREAK LAUNCHED</div>
-            <div class="gift-alert-sub" id="alertSub">OPERATOR ORDER DEPLOYED</div>
+        <div class="killstreak-banner" id="ksAlert">
+            <div class="ks-title" id="ksTitle">TACTICAL NUKE</div>
+            <div class="ks-sub" id="ksSub">STREAK BROUGHT BY OPERATOR</div>
         </div>
 
         <div class="settings-screen" id="settingsPanel">
-            <div class="settings-title">⚙️ NEXUS INTERFACE ENGINE</div>
+            <div class="settings-title">⚙️ TACTICAL CONFIG CENTER</div>
             <div class="setting-row">
-                <span class="setting-lbl">JOUW NAAM (GAMERTAG)</span>
+                <span class="setting-lbl">OPERATOR GAMERTAG</span>
                 <input type="text" class="setting-input" id="cfgUsername" value="grmryzen-pixelGOD">
             </div>
             <div class="setting-row">
-                <span class="setting-lbl">VOTE POT STRIJDER 01</span>
-                <input type="number" class="setting-input" id="cfgPotA" value="5240">
+                <span class="setting-lbl">MANIPULEER NODE 01 POT (€)</span>
+                <input type="number" class="setting-input" id="cfgPotA" value="7340">
             </div>
             <div class="setting-row">
-                <span class="setting-lbl">CHAT STREAM TEMPO</span>
+                <span class="setting-lbl">CHAT FEED TIMEOUT</span>
                 <select class="setting-input" id="cfgSpeed">
-                    <option value="1500">SNELLER (1.5s)</option>
-                    <option value="3000">NORMAAL (3.0s)</option>
+                    <option value="1200">RAPID APEX (1.2s)</option>
+                    <option value="2500">NORMAL PACE (2.5s)</option>
+                    <option value="4000">SLOW MOTION (4.0s)</option>
                 </select>
             </div>
-            <button class="close-btn" onclick="applySettingsEngine()">APPLY ENGINE CONFIG</button>
+            <div class="setting-row">
+                <span class="setting-lbl">FX OVERDRIVE MODE (GLOWS)</span>
+                <label class="switch-box">
+                    <input type="checkbox" id="cfgOverdrive" checked onchange="toggleOverdriveEngine()">
+                    <span class="slider-chk"></span>
+                </label>
+            </div>
+            <button class="close-btn" onclick="applyTacticalSettings()">COMMIT ENGINE CHANGES</button>
         </div>
 
         <div class="app-header">
             <span class="logo-text">NEXUS OPERATOR</span>
-            <div class="owner-cash" id="walletDisplay">WALLET: €2380.00</div>
+            <div class="owner-cash" id="walletDisplay">WALLET: €3450.00</div>
         </div>
 
         <div class="view-segment">
@@ -177,13 +234,13 @@
             <div class="live-arena-grid">
                 <div class="stream-card active-blue" id="boxA">
                     <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 8.4K</div>
+                    <div class="viewer-pill">👁️ 12.8K</div>
                     <div class="profile-title">Marouane_Live</div>
                     <div class="profile-sub">PRESTIGE MASTER</div>
                 </div>
                 <div class="stream-card" id="boxB">
                     <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 1.2K</div>
+                    <div class="viewer-pill">👁️ 3.4K</div>
                     <div class="profile-title">Anas_PvP</div>
                     <div class="profile-sub">ELITE COMMANDO</div>
                 </div>
@@ -197,33 +254,33 @@
             </div>
 
             <div class="chat-view-master" id="chatFlow">
-                <div class="msg-line" style="border-left-color: #0055ff;">
+                <div class="msg-line" style="border-left-color: #00d2ff;">
                     <div class="msg-meta">
-                        <span class="prestige-badge badge-lvl-water">💧 LVL 14</span>
+                        <span class="prestige-badge badge-lvl-water">💧 LVL 18</span>
                         <span class="name-txt camo-water">Mo_BlackOps</span>
                     </div>
-                    <span class="text-normal">Kijk die deeltjes vliegen nu dan! 🤯🔥</span>
+                    <span class="text-normal">Niemand kan tippen aan de V13 engine wtf!! 🔥</span>
                 </div>
             </div>
 
             <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
             <div class="gift-row">
-                <div class="gift-node" onclick="triggerGigaGift('⚡', 'RC-XD Shock', 10)">
+                <div class="gift-node" onclick="triggerAdvancedGift(event, '⚡', 'RC-XD Shock', 10)">
                     <span class="gift-avatar">⚡</span>
                     <span class="gift-lbl">RC-XD Shock</span>
                     <span class="gift-val">€10</span>
                 </div>
-                <div class="gift-node" onclick="triggerGigaGift('🔮', 'UAV Aura', 25)">
+                <div class="gift-node" onclick="triggerAdvancedGift(event, '🔮', 'UAV Aura', 25)">
                     <span class="gift-avatar">🔮</span>
                     <span class="gift-lbl">UAV Aura</span>
                     <span class="gift-val">€25</span>
                 </div>
-                <div class="gift-node" onclick="triggerGigaGift('👑', 'Chopper VIP', 50)">
+                <div class="gift-node" onclick="triggerAdvancedGift(event, '👑', 'Chopper VIP', 50)">
                     <span class="gift-avatar">👑</span>
                     <span class="gift-lbl">Chopper VIP</span>
                     <span class="gift-val">€50</span>
                 </div>
-                <div class="gift-node" onclick="triggerGigaGift('🚀', 'MOAB NUKE', 100)">
+                <div class="gift-node" onclick="triggerAdvancedGift(event, '🚀', 'MOAB NUKE', 100)">
                     <span class="gift-avatar">🚀</span>
                     <span class="gift-lbl">MOAB NUKE</span>
                     <span class="gift-val">€100</span>
@@ -233,196 +290,246 @@
             <div class="controls-row">
                 <div class="pot-box">
                     <span class="pot-lbl">POT 01</span>
-                    <span class="pot-cash c-blue" id="potDisplayA">€5240</span>
+                    <span class="pot-cash c-blue" id="potDisplayA">€7340</span>
                 </div>
-                <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
-                <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
+                <button class="action-btn btn-blue" onclick="sendCustomBoost(event, 'A')">BOOST NODE 01</button>
+                <button class="action-btn btn-pink" onclick="sendCustomBoost(event, 'B')">BOOST NODE 02</button>
                 <div class="pot-box" style="text-align: right;">
                     <span class="pot-lbl">POT 02</span>
-                    <span class="pot-cash c-pink" id="potDisplayB">€2760</span>
+                    <span class="pot-cash c-pink" id="potDisplayB">€3920</span>
                 </div>
             </div>
+
         </div>
 
         <div class="bottom-navbar">
-            <div class="nav-link active-link" id="navStage" onclick="openControlMenu(false)"><span>STAGE</span></div>
-            <div class="nav-link" id="navConfig" onclick="openControlMenu(true)"><span>CONFIG ⚙️</span></div>
+            <div class="nav-link active-link" id="navStage" onclick="toggleNavInterface(false)"><span>STAGE LINK</span></div>
+            <div class="nav-link" id="navConfig" onclick="toggleNavInterface(true)"><span>CONFIG ⚙️</span></div>
         </div>
 
     </div>
 
     <script {isCodeAccessible=true}>
-        let pA = 5240;
-        let pB = 2760;
-        let wallet = 2380.00;
+        let pA = 7340;
+        let pB = 3920;
+        let wallet = 3450.00;
         let particles = [];
-        let chatTimer = null;
-        let loopInterval = 2500;
+        let chatLoopEngine = null;
+        let speedSetting = 2500;
 
         const canvas = document.getElementById("fxCanvas");
         const ctx = canvas.getContext("2d");
 
-        function resizeCanvas() {
+        function adjustScreenCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        window.addEventListener('resize', adjustScreenCanvas);
+        adjustScreenCanvas();
 
-        // Canvas Particle Engine voor Échte Vliegende Gift Effecten
-        function spawnFlyingEmojis(emoji, count) {
-            for(let i=0; i<count; i++) {
+        // 🧠 VECTOR PHYSICS ENGINE FOR GIFT SPARKLES
+        function deployVectorExplosion(originX, originY, symbol, amount) {
+            for(let i=0; i<amount; i++) {
+                let angle = (Math.random() * Math.PI * 2);
+                let speed = Math.random() * 8 + 4;
                 particles.push({
-                    x: Math.random() * canvas.width,
-                    y: canvas.height - 80,
-                    vx: Math.random() * 4 - 2,
-                    vy: -(Math.random() * 6 + 5),
-                    size: Math.random() * 14 + 20,
-                    text: emoji,
+                    x: originX,
+                    y: originY,
+                    vx: Math.cos(angle) * speed,
+                    vy: -(Math.random() * 10 + 5), // Geforceerde opwaartse thrust vector
+                    size: Math.random() * 16 + 18,
+                    icon: symbol,
                     alpha: 1,
-                    rotation: Math.random() * Math.PI
+                    spin: Math.random() * 0.1 - 0.05,
+                    rotation: Math.random() * Math.PI,
+                    drag: 0.98,
+                    gravity: 0.25
                 });
             }
         }
 
-        function runFXLoop() {
+        function renderFrameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for(let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
+                p.vx *= p.drag;
+                p.vy += p.gravity;
                 p.x += p.vx;
                 p.y += p.vy;
-                p.alpha -= 0.012;
-                p.rotation += 0.02;
-                
+                p.alpha -= 0.014;
+                p.rotation += p.spin;
+
                 ctx.save();
                 ctx.globalAlpha = p.alpha;
                 ctx.translate(p.x, p.y);
                 ctx.rotate(p.rotation);
                 ctx.font = `${p.size}px Impact`;
-                ctx.fillText(p.text, -p.size/2, p.size/2);
+                ctx.fillStyle = "#ffffff";
+                ctx.shadowColor = varColorLookup(p.icon);
+                ctx.shadowBlur = 15;
+                ctx.fillText(p.icon, -p.size/2, p.size/2);
                 ctx.restore();
 
-                if(p.alpha <= 0 || p.y < 0) particles.splice(i, 1);
+                if(p.alpha <= 0 || p.y > canvas.height) {
+                    particles.splice(i, 1);
+                }
             }
-            requestAnimationFrame(runFXLoop);
+            requestAnimationFrame(renderFrameLoop);
         }
-        runFXLoop();
+        renderFrameLoop();
 
-        function triggerImpactFx() {
+        function varColorLookup(icon) {
+            if(icon === '⚡') return "#ffea00";
+            if(icon === '🔮') return "#00ffcc";
+            if(icon === '👑') return "#ff0055";
+            return "#ff5500";
+        }
+
+        function triggerHardImpact() {
             let flash = document.getElementById("flashFx");
-            flash.style.animation = "strikeFlash 0.25s ease-out";
+            flash.style.animation = "strikeFlash 0.2s ease-out";
             let container = document.getElementById("shell");
-            container.style.animation = "screenShake 0.35s ease-in-out";
-            setTimeout(() => { flash.style.animation = ""; container.style.animation = ""; }, 350);
+            container.style.animation = "screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both";
+            setTimeout(() => { flash.style.animation = ""; container.style.animation = ""; }, 400);
         }
 
-        // Activeer Gift inclusief Visuele Banner én Rondvliegende Deeltjes
-        function triggerGigaGift(emoji, giftName, cost) {
-            triggerImpactFx();
-            spawnFlyingEmojis(emoji, 25); // Schiet direct 25 losse emoji-deeltjes omhoog!
-            
+        // ADVANCED GIFT INTERACTION WITH COORDINATE TRACING
+        function triggerAdvancedGift(event, symbol, name, cost) {
+            let rect = canvas.getBoundingClientRect();
+            let clickX = event.clientX - rect.left;
+            let clickY = event.clientY - rect.top;
+
+            triggerHardImpact();
+            deployVectorExplosion(clickX, clickY, symbol, 38);
+
             wallet += cost;
             document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
-            
-            // Toon de Giga Alert Banner op het scherm
-            let banner = document.getElementById("alertBanner");
-            document.getElementById("alertTitle").innerText = `🔥 ${giftName.toUpperCase()} DEPLOYED!`;
-            document.getElementById("alertSub").innerText = `BY ORDER OF PRESTIGE MASTER`;
-            banner.classList.add("show-alert");
-            
-            setTimeout(() => { banner.classList.remove("show-alert"); }, 2000);
 
-            let currentOwner = document.getElementById("cfgUsername").value;
-            injectPrestigeChat(currentOwner, `LAUNCHED ULTRA PRESTIGE STREAK: ${emoji} ${giftName.toUpperCase()}!`, true, true);
+            // Trigger Massive Drop Banner Alert
+            let alertBox = document.getElementById("ksAlert");
+            document.getElementById("ksTitle").innerText = `💥 ${name.toUpperCase()} LAUNCHED`;
+            document.getElementById("ksSub").innerText = "TACTICAL REINFORCEMENTS ACQUIRED BY OVERLORD";
+            alertBox.classList.add("active-banner");
+
+            setTimeout(() => { alertBox.classList.remove("active-banner"); }, 2500);
+
+            let masterUser = document.getElementById("cfgUsername").value;
+            executeChatLog(masterUser, `ACQUIRED HIGH-TIER COMMAND KILLSTREAK: ${symbol} ${name.toUpperCase()}!`, true, true);
         }
 
-        function sendNodeBoost(target) {
-            triggerImpactFx();
-            if(target === 'A') {
-                pA += 180;
+        function sendCustomBoost(event, terminal) {
+            let rect = canvas.getBoundingClientRect();
+            triggerHardImpact();
+            deployVectorExplosion(event.clientX - rect.left, event.clientY - rect.top, '⚡', 15);
+
+            if(terminal === 'A') {
+                pA += 240;
                 document.getElementById("potDisplayA").innerText = "€" + pA;
                 document.getElementById("boxA").classList.add("active-blue");
                 document.getElementById("boxB").classList.remove("active-pink");
             } else {
-                pB += 180;
+                pB += 240;
                 document.getElementById("potDisplayB").innerText = "€" + pB;
                 document.getElementById("boxB").classList.add("active-pink");
                 document.getElementById("boxA").classList.remove("active-blue");
             }
-            let totalSum = pA + pB;
-            document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
-            
-            let currentOwner = document.getElementById("cfgUsername").value;
-            injectPrestigeChat(currentOwner, `OVERLORD SYSTEM ENGAGED. NODE 0${target === 'A' ? '1' : '2'} FUNDED. ⚡`, true, false);
+
+            let sum = pA + pB;
+            document.getElementById("powerRatioA").style.width = ((pA / sum) * 100) + "%";
+
+            let masterUser = document.getElementById("cfgUsername").value;
+            executeChatLog(masterUser, `ENGAGED DIRECT FUNDING OVERRIDE ON TERMINAL 0${terminal === 'A' ? '1':'2'}.`, true, false);
         }
 
-        // Settings Scherm Besturing
-        function openControlMenu(show) {
-            let panel = document.getElementById("settingsPanel");
-            panel.style.display = show ? "flex" : "none";
-            document.getElementById("navConfig").classList.toggle("active-link", show);
-            document.getElementById("navStage").classList.toggle("active-link", !show);
+        // SETTINGS DISPATCHERS
+        function toggleNavInterface(activateMenu) {
+            document.getElementById("settingsPanel").style.display = activateMenu ? "flex" : "none";
+            document.getElementById("navConfig").classList.toggle("active-link", activateMenu);
+            document.getElementById("navStage").classList.toggle("active-link", !activateMenu);
         }
 
-        function applySettingsEngine() {
+        function toggleOverdriveEngine() {
+            let container = document.getElementById("shell");
+            let enabled = document.getElementById("cfgOverdrive").checked;
+            if(!enabled) {
+                container.classList.add("fx-disabled");
+            } else {
+                container.classList.remove("fx-disabled");
+            }
+        }
+
+        function applyTacticalSettings() {
             pA = parseInt(document.getElementById("cfgPotA").value) || pA;
             document.getElementById("potDisplayA").innerText = "€" + pA;
             
-            let totalSum = pA + pB;
-            document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
-            
-            loopInterval = parseInt(document.getElementById("cfgSpeed").value);
-            clearInterval(chatTimer);
-            startChatSimulation();
-            
-            openControlMenu(false);
+            let sum = pA + pB;
+            document.getElementById("powerRatioA").style.width = ((pA / sum) * 100) + "%";
+
+            speedSetting = parseInt(document.getElementById("cfgSpeed").value);
+            clearInterval(chatLoopEngine);
+            initiateAutomatedStreams();
+
+            toggleNavInterface(false);
         }
 
-        function injectPrestigeChat(sender, message, isGodMode, isGift) {
-            let flow = document.getElementById("chatFlow");
-            let element = document.createElement("div");
-            element.className = "msg-line";
+        function executeChatLog(sender, text, isGod, isGift) {
+            let chatBox = document.getElementById("chatFlow");
+            let block = document.createElement("div");
+            block.className = "msg-line";
 
-            if (isGodMode) {
-                element.className = "msg-line owner-line";
-                element.style.borderLeft = "4px solid #00ffcc";
-                element.style.background = "linear-gradient(90deg, rgba(0,255,204,0.1) 0%, transparent 100%)";
-                element.innerHTML = `
+            if (isGod) {
+                block.className = "msg-line owner-line";
+                block.style.borderLeft = "4px solid var(--neon-cyan)";
+                block.style.background = "linear-gradient(90deg, rgba(0,255,204,0.08) 0%, transparent 100%)";
+                block.innerHTML = `
                     <div class="msg-meta">
-                        <span class="prestige-badge badge-lvl-god">👑 PRESTIGE GOD</span>
-                        <span class="name-txt camo-pixelgod">${sender}</span>
+                        <span class="prestige-badge badge-lvl-god">👑 OVERLORD</span>
+                        <span class="name-txt camo-pixelgod" data-text="${sender}">${sender}</span>
                     </div>
-                    <span class="${isGift ? 'text-gift' : 'text-normal'}" style="color: #fff; font-weight: 800;">${message}</span>
+                    <span class="${isGift ? 'text-gift' : 'text-normal'}" style="color: #fff; font-weight: bold;">${text}</span>
                 `;
             } else {
-                let roll = Math.random() > 0.5;
-                let badgeClass = roll ? "badge-lvl-water" : "badge-lvl-shock";
-                let camoClass = roll ? "camo-water" : "camo-shock";
-                let levelNum = roll ? "💧 LVL " + Math.floor(Math.random() * 20 + 1) : "⚡ LVL " + Math.floor(Math.random() * 30 + 21);
-                element.style.borderLeft = roll ? "3px solid #0055ff" : "3px solid #ff5500";
+                let rng = Math.random();
+                let badgeStyle = "badge-lvl-water";
+                let camoStyle = "camo-water";
+                let prefix = "💧 LVL " + Math.floor(Math.random() * 19 + 1);
+                block.style.borderLeftColor = "var(--water-glow)";
 
-                element.innerHTML = `
+                if (rng > 0.4 && rng <= 0.8) {
+                    badgeStyle = "badge-lvl-shock";
+                    camoStyle = "camo-shock";
+                    prefix = "⚡ LVL " + Math.floor(Math.random() * 28 + 21);
+                    block.style.borderLeftColor = "var(--volt-glow)";
+                } else if (rng > 0.8) {
+                    badgeStyle = "badge-lvl-magma";
+                    camoStyle = "camo-magma";
+                    prefix = "🔥 MASTER " + Math.floor(Math.random() * 50 + 50);
+                    block.style.borderLeftColor = "var(--magma-glow)";
+                }
+
+                block.innerHTML = `
                     <div class="msg-meta">
-                        <span class="prestige-badge ${badgeClass}">${levelNum}</span>
-                        <span class="name-txt ${camoClass}">${sender}</span>
+                        <span class="prestige-badge ${badgeStyle}">${prefix}</span>
+                        <span class="name-txt ${camoStyle}">${sender}</span>
                     </div>
-                    <span class="text-normal">${message}</span>
+                    <span class="text-normal">${text}</span>
                 `;
             }
-            flow.appendChild(element);
-            flow.scrollTop = flow.scrollHeight;
+
+            chatBox.appendChild(block);
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function startChatSimulation() {
-            chatTimer = setInterval(() => {
-                const names = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
-                const texts = ["Gooi die nuke dan!", "Kijk die deeltjes vliegen wtf!! 🔥", "Team 01 staat voor!", "Zieke stroom effecten bro"];
-                let user = names[Math.floor(Math.random() * names.length)];
-                let txt = texts[Math.floor(Math.random() * texts.length)];
-                injectPrestigeChat(user, txt, false, false);
-            }, loopInterval);
+        function initiateAutomatedStreams() {
+            chatLoopEngine = setInterval(() => {
+                const names = ["Riffi_Commando", "Tarifit_Warrior", "Sniper_Elite", "Mo_VoltEdge", "Magma_PvP"];
+                const messages = ["Gooi die nuke dan!", "Kijk die vector physics vliegen wtf!", "V13 is te gevaarlijk bro", "Wie boost Node 02?"];
+                let u = names[Math.floor(Math.random() * names.length)];
+                let m = messages[Math.floor(Math.random() * messages.length)];
+                executeChatLog(u, m, false, false);
+            }, speedSetting);
         }
-        startChatSimulation();
+        initiateAutomatedStreams();
     </script>
 </body>
 </html>
