@@ -3,183 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS LIVE ULTRA PRESTIGE</title>
+    <title>NEXUS - OVERLORD NETWORK</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
-        body { background-color: #06070d; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas', 'Courier New', monospace; user-select: none; }
+        body { background-color: #030407; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
         
-        /* Telefoon Container Simulator */
-        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #0b0c10; border: 4px solid #1f232e; border-radius: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(0, 255, 204, 0.15); }
+        /* Telefoon Container */
+        .phone-container { width: 100%; max-width: 412px; height: 92vh; max-height: 820px; background-color: #07080c; border: 3px solid #141923; border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 60px rgba(255, 0, 85, 0.05); }
         
-        /* Header */
-        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1a1d24; background: linear-gradient(to bottom, #11131a, #0b0c10); }
-        .logo-text { font-size: 26px; font-weight: 900; color: #00ffcc; letter-spacing: 4px; text-shadow: 0 0 15px rgba(0,255,204,0.4); }
-        .owner-badge-top { background: linear-gradient(135deg, #ffe066, #f5b041); color: #000; padding: 5px 14px; border-radius: 14px; font-weight: 900; font-size: 11px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(245,176,65,0.4); text-transform: uppercase; }
-        .owner-profit { font-size: 12px; color: #00ffcc; font-weight: 800; margin-top: 4px; text-align: right; }
+        /* Cyber Header */
+        .app-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #111622; background: #07080c; }
+        .logo-text { font-size: 24px; font-weight: 900; color: #00ffcc; letter-spacing: 5px; text-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        .owner-info-panel { text-align: right; }
+        .owner-badge-top { background: #ff0055; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 900; font-size: 10px; letter-spacing: 2px; box-shadow: 0 0 15px rgba(255,0,85,0.4); text-transform: uppercase; border: 1px solid #ff5588; }
+        .owner-profit { font-size: 11px; color: #00ffcc; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
 
-        /* Arena Scherm */
-        .live-screen { flex: 1; position: relative; background-color: #050608; background-image: linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px); background-size: 25px 25px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; }
-        .live-badge { position: absolute; top: 15px; left: 15px; background-color: #ff0055; color: white; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 11px; letter-spacing: 1.5px; animation: blink 1.5s infinite; box-shadow: 0 0 20px rgba(255,0,85,0.5); z-index: 10; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        /* Arena */
+        .live-screen { flex: 1; position: relative; background-color: #040508; background-image: linear-gradient(rgba(20, 25, 35, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 25, 35, 0.3) 1px, transparent 1px); background-size: 30px 30px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; overflow: hidden; }
+        .live-badge { position: absolute; top: 15px; left: 15px; border: 1px solid #ff0055; color: #ff0055; padding: 4px 10px; font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,0,85,0.1); }
         
-        /* Versus Bar */
-        .versus-bar { position: absolute; top: 70px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; }
-        .creator { display: flex; flex-direction: column; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
-        .creator .name { font-weight: 900; font-size: 17px; }
-        .creator .sub { font-size: 10px; color: #8a8f9e; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-        .creator-a .name { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.2); }
+        /* Versus Matrix */
+        .versus-bar { position: absolute; top: 65px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; }
+        .creator { display: flex; flex-direction: column; }
+        .creator .name { font-weight: 900; font-size: 15px; letter-spacing: 1px; }
+        .creator .sub { font-size: 9px; color: #525966; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+        .creator-a .name { color: #00ffcc; }
         .creator-b { text-align: right; }
-        .creator-b .name { color: #ff0055; text-shadow: 0 0 10px rgba(255,0,85,0.2); }
-        .vs-sign { background: #161920; border: 2px solid #252936; padding: 6px 12px; border-radius: 12px; font-weight: 900; font-size: 12px; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .creator-b .name { color: #ff0055; }
+        .vs-sign { background: #0b0f17; border: 1px solid #1a2233; padding: 4px 10px; font-weight: 900; font-size: 11px; color: #525966; }
 
-        /* Next-Gen Chat Box */
-        .live-chat { max-height: 240px; overflow-y: hidden; display: flex; flex-direction: column; gap: 10px; margin-bottom: 5px; z-index: 5; }
-        .chat-msg { background: rgba(15, 17, 26, 0.85); padding: 12px 16px; border-radius: 16px; font-size: 13px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); animation: slideUp 0.25s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 8px 20px rgba(0,0,0,0.4); display: flex; flex-direction: column; gap: 4px; }
-        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* Tactical Chat Box */
+        .live-chat { max-height: 260px; overflow-y: hidden; display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; z-index: 5; }
+        .chat-msg { background: rgba(11, 15, 23, 0.9); padding: 10px 14px; border-radius: 4px; font-size: 12px; border: 1px solid #141923; display: flex; flex-direction: column; gap: 5px; }
         
-        /* Badge Styles */
-        .badge-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .rank-tag { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; }
+        /* THE LOCKDOWN: Owner Chat Box Styling */
+        .msg-owner {
+            background: linear-gradient(90deg, rgba(255,0,85,0.15) 0%, rgba(11,15,23,0.95) 100%) !important;
+            border: 1px solid #ff0055 !important;
+            box-shadow: 0 0 20px rgba(255,0,85,0.2);
+            position: relative;
+        }
+        .msg-owner::before {
+            content: 'SYSTEM LOCKDOWN';
+            position: absolute;
+            right: 10px;
+            top: 4px;
+            font-size: 7px;
+            color: rgba(255,0,85,0.5);
+            letter-spacing: 1px;
+            font-weight: 900;
+        }
         
-        /* Ranks */
-        .rank-owner { background: linear-gradient(135deg, #ffe066, #f5b041); color: #000; box-shadow: 0 0 8px rgba(245,176,65,0.5); font-weight: 900; }
-        .rank-legend { background: linear-gradient(135deg, #b000ff, #ff00b8); color: #fff; box-shadow: 0 0 8px rgba(176,0,255,0.4); }
-        .rank-immortal { background: linear-gradient(135deg, #ff3333, #ff0055); color: #fff; }
-        .rank-diamond { background: linear-gradient(135deg, #00ffff, #0088ff); color: #000; }
-        .rank-noob { background: #2e3440; color: #d8dee9; }
+        /* Professional Badges (No Emojis) */
+        .badge-row { display: flex; align-items: center; gap: 8px; }
+        .prestige-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase; }
+        
+        /* 10 Prestige Tiers Custom CSS */
+        .p-tier-1 { background: #3b4252; color: #d8dee9; }
+        .p-tier-2 { background: #4c566a; color: #eceff4; }
+        .p-tier-3 { background: #4f5b47; color: #a3be8c; }
+        .p-tier-4 { background: #2b4366; color: #81a1c1; }
+        .p-tier-5 { background: #005f5f; color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+        .p-tier-6 { background: #4c3b66; color: #b48ead; }
+        .p-tier-7 { background: #1f4c40; color: #8fbcbb; }
+        .p-tier-8 { background: rgba(255,0,85,0.2); color: #ff0055; border: 1px solid #ff0055; }
+        .p-tier-9 { background: #5e4a2b; color: #ebcb8b; }
+        /* Tier 10: Absolute Max Power */
+        .p-tier-10 { 
+            background: #000000; 
+            color: #ff0055; 
+            border: 1px solid #00ffcc; 
+            box-shadow: 0 0 10px #ff0055, inset 0 0 5px #00ffcc;
+            font-weight: 900;
+            animation: glitchBorder 2s infinite alternate;
+        }
 
-        /* NAAM SKINS & EFFECTEN (The Real Work) */
+        /* Gevaarlijke Naam Skins */
+        .name-user { font-weight: 700; color: #8892b0; }
+        .name-high { color: #00ffcc; font-weight: 800; }
         
-        /* Owner: Rainbow Pulsar Skin */
+        /* Owner Name Skin: VOID ECLIPSE */
         .name-owner {
-            background-image: linear-gradient(to left, #f5b041, #ffe066, #00ffcc, #ff0055, #f5b041);
-            background-size: 400% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #ffffff;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: rainbowFlow 6s linear infinite;
-            filter: drop-shadow(0 0 5px rgba(245,176,65,0.6));
+            letter-spacing: 2px;
+            text-shadow: -2px -2px 0 #ff0055, 2px 2px 0 #00ffcc;
+            animation: heavyGlitch 1s infinite alternate;
         }
-        @keyframes rainbowFlow {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 400% 0%; }
-        }
-
-        /* Legend: Electrified Plasma Skin */
-        .name-legend {
-            color: #fff;
-            font-weight: 800;
-            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #d946ef, 0 0 20px #d946ef, 0 0 25px #d946ef;
-            animation: plasmaPulse 1.5s ease-in-out infinite alternate;
-        }
-        @keyframes plasmaPulse {
-            from { text-shadow: 0 0 5px #fff, 0 0 10px #d946ef; }
-            to { text-shadow: 0 0 10px #fff, 0 0 20px #ff00b8; }
-        }
-
-        /* Immortal: Crimson Fire Skin */
-        .name-immortal {
-            color: #ff3333;
-            font-weight: 800;
-            text-shadow: 0 1px #800, 0 0 5px #ff4545, 0 -1px 3px #ff4545;
-            animation: fireFlicker 2s infinite;
-        }
-        @keyframes fireFlicker {
-            0% { text-shadow: 0 0 5px #ff4545; }
-            50% { text-shadow: 0 0 8px #ff4545, 0 -2px 5px #f54; }
-            100% { text-shadow: 0 0 5px #ff4545; }
-        }
-
-        /* Diamond: Ice Crystal Skin */
-        .name-diamond {
-            color: #00ffff;
-            font-weight: 800;
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #38bdf8, 0 0 15px #38bdf8;
-            background: linear-gradient(135deg, #00ffff 30%, #fff 50%, #00ffff 70%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: iceShine 3s linear infinite;
-        }
-        @keyframes iceShine {
-            0% { background-position: -100% 0%; }
-            100% { background-position: 100% 0%; }
+        @keyframes heavyGlitch {
+            0% { text-shadow: -1px -2px 0 #ff0055, 1px 1px 0 #00ffcc; }
+            100% { text-shadow: 2px 1px 0 #ff0055, -2px -1px 0 #00ffcc; }
         }
         
-        .chat-msg .text { color: #e2e8f0; line-height: 1.4; }
+        .chat-msg .text { color: #ccd6f6; line-height: 1.4; font-size: 11px; }
 
-        /* Actie Knoppen */
-        .action-area { padding: 25px; background-color: #0b0c10; border-top: 2px solid #1a1d24; }
+        /* Tactical Knoppen */
+        .action-area { padding: 25px; background-color: #07080c; border-top: 2px solid #111622; }
         .pool-stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .pool-box { display: flex; flex-direction: column; gap: 4px; }
         .pool-box.right { align-items: flex-end; }
-        .pool-label { font-size: 11px; color: #717789; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
-        .pool-amount { font-size: 26px; font-weight: 900; color: #fff; letter-spacing: 0.5px; }
-        #amount-a { color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.3); }
-        #amount-b { color: #ff0055; text-shadow: 0 0 15px rgba(255,0,85,0.3); }
+        .pool-label { font-size: 9px; color: #434956; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        .pool-amount { font-size: 22px; font-weight: 900; color: #fff; }
+        #amount-a { color: #00ffcc; }
+        #amount-b { color: #ff0055; }
         
-        .btn-container { display: flex; gap: 14px; }
-        .btn { flex: 1; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 14px; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-transform: uppercase; letter-spacing: 1px; }
-        .btn-a { background: linear-gradient(135deg, #00ffcc, #00a3ff); color: #000; box-shadow: 0 0 25px rgba(0,255,204,0.3); }
-        .btn-b { background: linear-gradient(135deg, #ff0055, #7a00ff); color: #fff; box-shadow: 0 0 25px rgba(255,0,85,0.3); }
-        .btn:active { transform: scale(0.95); }
-
-        /* Pop-up */
-        .level-popup { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.7); background: rgba(11, 12, 16, 0.95); border: 2px solid #ffe066; padding: 25px 45px; border-radius: 24px; text-align: center; box-shadow: 0 0 40px rgba(245,176,65,0.4); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; backdrop-filter: blur(10px); }
-        .level-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .level-popup h2 { color: #ffe066; font-size: 28px; font-weight: 900; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 15px rgba(245,176,65,0.5); }
-        .level-popup p { color: #fff; font-size: 15px; font-weight: 700; }
+        .btn-container { display: flex; gap: 12px; }
+        .btn { flex: 1; padding: 16px; border: 1px solid transparent; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; transition: 0.1s; }
+        .btn-a { background: rgba(0,255,204,0.1); color: #00ffcc; border-color: #00ffcc; }
+        .btn-b { background: rgba(255,0,85,0.1); color: #ff0055; border-color: #ff0055; }
+        .btn:active { transform: scale(0.98); background: #fff; color: #000; }
     </style>
 </head>
 <body>
 
     <div class="phone-container">
-        <div class="level-popup" id="levelUpAlert">
-            <h2>⚡ PRESTIGE UP </h2>
-            <p id="levelPopupText">grmryzen-pixelGOD stijgt naar Level 100!</p>
-        </div>
-
         <div class="app-header">
             <span class="logo-text">NEXUS</span>
-            <div>
-                <span class="owner-badge-top" id="ownerLvlDisplay">👑 OWNER LVL 99</span>
-                <div class="owner-profit" id="profitDisplay">Kluis: €0.00</div>
+            <div class="owner-info-panel">
+                <span class="owner-badge-top">PRSTG X MASTER</span>
+                <div class="owner-profit" id="profitDisplay">NET_WORTH: €0.00</div>
             </div>
         </div>
 
         <div class="live-screen">
-            <div class="live-badge">● LIVE PvP</div>
+            <div class="live-badge">NET_STREAM // PvP</div>
             
             <div class="versus-bar">
                 <div class="creator creator-a">
                     <span class="name">Marouane_Live</span>
-                    <span class="sub">👑 Rank #1 Win Streak</span>
+                    <span class="sub">NODE_01 // SEC_LEADER</span>
                 </div>
                 <div class="vs-sign">VS</div>
                 <div class="creator creator-b">
                     <span class="name">Anas_PvP</span>
-                    <span class="sub">⚡ Arena Slayer</span>
+                    <span class="sub">NODE_02 // STRIKER</span>
                 </div>
             </div>
 
             <div class="live-chat" id="chatContainer">
                 <div class="chat-msg">
                     <div class="badge-row">
-                        <span class="rank-tag rank-diamond">💎 DIAMOND</span>
-                        <span class="user-name name-diamond">Samir070</span>
+                        <span class="prestige-tag p-tier-4">PRSTG IV</span>
+                        <span class="user-name name-high">Samir070</span>
                     </div>
-                    <span class="text">Marouane gaat deze sowieso pakken! 🔥</span>
+                    <span class="text">Inzet geplaatst op Node 01. Sloop hem.</span>
                 </div>
                 <div class="chat-msg">
                     <div class="badge-row">
-                        <span class="rank-tag rank-immortal">🔥 IMMORTAL</span>
-                        <span class="user-name name-immortal">Mo_PvP</span>
+                        <span class="prestige-tag p-tier-1">PRSTG I</span>
+                        <span class="user-name name-user">Mo_PvP</span>
                     </div>
-                    <span class="text">Anas is te snel broer, let op. Counter komt zo.</span>
+                    <span class="text">Anas countert dit binnen twee seconden, let op.</span>
                 </div>
             </div>
         </div>
@@ -187,99 +162,87 @@
         <div class="action-area">
             <div class="pool-stats">
                 <div class="pool-box">
-                    <span class="pool-label">Pot Marouane</span>
-                    <span class="pool-amount" id="amount-a">€4340</span>
+                    <span class="pool-label">MATRIX_POT_01</span>
+                    <span class="pool-amount" id="amount-a">€9250</span>
                 </div>
                 <div class="pool-box right">
-                    <span class="pool-label">Pot Anas</span>
-                    <span class="pool-amount" id="amount-b">€360</span>
+                    <span class="pool-label">MATRIX_POT_02</span>
+                    <span class="pool-amount" id="amount-b">€1480</span>
                 </div>
             </div>
             <div class="btn-container">
-                <button class="btn btn-a" onclick="supportCreator('A')">Steun Marouane</button>
-                <button class="btn btn-b" onclick="supportCreator('B')">Steun Anas</button>
+                <button class="btn btn-a" onclick="supportCreator('A')">EXECUTE_01</button>
+                <button class="btn btn-b" onclick="supportCreator('B')">EXECUTE_02</button>
             </div>
         </div>
     </div>
 
     <script>
-        let potA = 4340;
-        let potB = 360;
+        let potA = 9250;
+        let potB = 1480;
         let platformWinst = 0.00;
-        let eigenXP = 0;
-        let eigenLevel = 99; // Start direct op MAX level flex
 
-        const rNamen = ["SolanaKoning", "Tarifit_G", "CryptoStrijder", "Knaap_PvP", "NXT_Lvl", "EliteUser"];
-        const rRanks = ["diamond", "immortal", "legend", "noob"];
-        const rTekstenA = ["Hoppaaaa dikke saaf op rood!", "Marouane sloopt de arena vandaag!", "Gooi die gifts omhoog! 🔥"];
-        const rTekstenB = ["Team Anas sowieso!", "Anas gaat de hele pot kapotslaan", "💀 Broer Anas is te gevaarlijk"];
+        const rNamen = ["SolanaKoning", "Tarifit_G", "CryptoStrijder", "Knaap_PvP", "NXT_Lvl", "Alpha_Op", "DeltaHost"];
+        // 10 Verskillende Prestige Tiers gekoppeld aan de CSS
+        const rTiers = ["p-tier-1", "p-tier-2", "p-tier-3", "p-tier-4", "p-tier-5", "p-tier-6", "p-tier-7", "p-tier-8", "p-tier-9"];
+        const rTeksten = ["Matrix gecrasht door die klap.", "Dikke volumes rollen hier binnen.", "Systeem draait op max.", "Verhoog die inzet direct."];
 
         function supportCreator(team) {
-            let inzet = 150; // Nóg dikker bedrag per klik
+            let inzet = 250; 
             let fee = inzet * 0.20; 
             platformWinst += fee;
-            eigenXP += 35; 
             
-            document.getElementById("profitDisplay").innerText = "Kluis: €" + platformWinst.toFixed(2);
+            document.getElementById("profitDisplay").innerText = "NET_WORTH: €" + platformWinst.toFixed(2);
             
             if(team === 'A') {
                 potA += inzet;
                 document.getElementById("amount-a").innerText = "€" + potA;
-                voegChatToe("grmryzen-pixelGOD", randomElement(rTekstenA), "owner");
+                voegChatToe("grmryzen-pixelGOD", "OVERLORD SYSTEM ENGAGED. NODE_01 FUNDED.", "p-tier-10", true);
             } else {
                 potB += inzet;
                 document.getElementById("amount-b").innerText = "€" + potB;
-                voegChatToe("grmryzen-pixelGOD", randomElement(rTekstenB), "owner");
-            }
-
-            if (eigenXP >= 100) {
-                eigenLevel++;
-                eigenXP = 0;
-                document.getElementById("ownerLvlDisplay").innerText = "👑 OWNER LVL " + eigenLevel;
-                
-                let popup = document.getElementById("levelUpAlert");
-                document.getElementById("levelPopupText").innerText = "grmryzen-pixelGOD stijgt naar Level " + eigenLevel + "!";
-                popup.classList.add("show");
-                setTimeout(() => popup.classList.remove("show"), 2000);
+                voegChatToe("grmryzen-pixelGOD", "OVERLORD SYSTEM ENGAGED. NODE_02 FUNDED.", "p-tier-10", true);
             }
             
-            setTimeout(simuleerPubliekChat, 600);
+            setTimeout(simuleerPubliekChat, 400);
         }
 
-        function voegChatToe(naam, tekst, rank) {
+        function voegChatToe(naam, tekst, tierClass, isOwner = false) {
             let chatContainer = document.getElementById("chatContainer");
             let msg = document.createElement("div");
-            msg.className = "chat-msg";
             
-            let badgeText = rank.toUpperCase();
-            if(rank === 'owner') badgeText = "👑 OWNER";
-            if(rank === 'legend') badgeText = "🏆 LEGEND";
-            if(rank === 'immortal') badgeText = "🔥 IMMORTAL";
-            if(rank === 'diamond') badgeText = "💎 DIAMOND";
+            // Pas de specifieke lockdown class toe als de owner typt
+            if(isOwner) {
+                msg.className = "chat-msg msg-owner";
+                tierName = "PRSTG X // OWNER";
+                nameClass = "name-owner";
+            } else {
+                msg.className = "chat-msg";
+                // Bereken Romeinse cijfers op basis van de willekeurige tier voor de show
+                let tierNum = tierClass.split('-')[2];
+                let romanArray = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+                tierName = "PRSTG " + romanArray[tierNum - 1];
+                nameClass = (tierNum > 4) ? "name-high" : "name-user";
+            }
 
             msg.innerHTML = `
                 <div class="badge-row">
-                    <span class="rank-tag rank-${rank}">${badgeText}</span>
-                    <span class="user-name name-${rank}">${naam}</span>
+                    <span class="prestige-tag ${tierClass}">${tierName}</span>
+                    <span class="user-name ${nameClass}">${naam}</span>
                 </div>
                 <span class="text">${tekst}</span>
             `;
             
             chatContainer.appendChild(msg);
-            if (chatContainer.children.length > 4) chatContainer.removeChild(chatContainer.children[0]);
+            if (chatContainer.children.length > 5) chatContainer.removeChild(chatContainer.children[0]);
         }
 
         function simuleerPubliekChat() {
-            let naam = randomElement(rNamen);
-            let rank = randomElement(rRanks);
-            let coinFlip = Math.random() > 0.5;
-            let tekst = coinFlip ? randomElement(rTekstenA) : randomElement(rTekstenB);
+            let naam = rNamen[Math.floor(Math.random() * rNamen.length)];
+            let tier = rTiers[Math.floor(Math.random() * rTiers.length)];
+            let tekst = rTeksten[Math.floor(Math.random() * rTeksten.length)];
             
-            voegChatToe(naam, tekst, rank);
-        }
-
-        function randomElement(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
+            voegChatToe(naam, tekst, tier, false);
         }
     </script>
 
