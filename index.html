@@ -1,535 +1,1042 @@
+
+```html
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS - GOD MODE V13</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NEXUS // ULTRA-PREMIUM PvP STREAM & GIFTING</title>
     <style>
+        /* --- CORE SYSTEM ARCHITECTURE & RESET --- */
         :root {
-            --neon-orange: #ff5500;
-            --neon-cyan: #00ffcc;
-            --neon-pink: #ff0055;
-            --dark-core: #020308;
-            --panel-bg: #060a17;
-            --water-glow: #00d2ff;
-            --volt-glow: #ffea00;
-            --magma-glow: #ff3300;
+            --bg-main: #050508;
+            --bg-card: rgba(14, 15, 23, 0.85);
+            --border-glow: rgba(0, 242, 254, 0.2);
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #4facfe;
+            --neon-yellow: #ffee00;
+            --neon-red: #ff3333;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --pot-1-fill: 50%;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Segoe UI', sans-serif; user-select: none; }
-        body { background: #000; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-
-        /* Mobile Container Grid Layout */
-        .phone-container { 
-            width: 100%; max-width: 420px; height: 100vh; background: var(--dark-core); 
-            display: flex; flex-direction: column; position: relative; overflow: hidden;
-            border: 2px solid #111827; box-shadow: 0 0 60px rgba(0,0,0,1);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* FX Overdrive Class switcher via JS */
-        .fx-disabled * { animation: none !important; text-shadow: none !important; box-shadow: none !important; filter: none !important; }
-
-        /* Canvas Particle Layer */
-        #fxCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 900; }
-
-        /* Master Impact Overlays */
-        .flash-overlay { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 999; }
-        @keyframes strikeFlash { 0% { opacity: 0; } 10% { opacity: 0.8; } 100% { opacity: 0; } }
-        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 10% { transform: translate(-6px, 5px) rotate(-1deg); } 30% { transform: translate(6px, -4px) rotate(1deg); } 50% { transform: translate(-3px, -3px); } 70% { transform: translate(3px, 2px); } }
-
-        /* 🚀 BRUTE KILLSTREAK DROP BANNER */
-        .killstreak-banner {
-            position: absolute; top: -150px; left: 5%; width: 90%; background: linear-gradient(180deg, #0f0202 0%, #4a0000 100%);
-            border: 3px solid var(--neon-pink); border-radius: 4px; padding: 16px; text-align: center; z-index: 950;
-            box-shadow: 0 0 40px var(--neon-pink), inset 0 0 20px #000; pointer-events: none;
-            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; opacity: 0;
-        }
-        .killstreak-banner.active-banner { top: 25%; opacity: 1; animation: bannerPulse 0.5s infinite alternate; }
-        .ks-title { font-size: 26px; color: #fff; letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-pink); text-transform: uppercase; }
-        .ks-sub { font-size: 13px; color: #ffcc00; font-weight: bold; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px; margin-top: 4px; }
-        @keyframes bannerPulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); border-color: #fff; } }
-
-        /* Military Pro Header */
-        .app-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: #05070f; border-bottom: 2px solid var(--neon-orange); z-index: 10; }
-        .logo-text { font-size: 26px; font-weight: 900; font-style: italic; color: var(--neon-orange); letter-spacing: 3px; text-shadow: 0 0 15px rgba(255,85,0,0.6); }
-        .owner-cash { font-size: 13px; color: var(--neon-cyan); font-weight: bold; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
-
-        /* Workspace Grid */
-        .view-segment { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px; padding-bottom: 65px; }
-
-        /* 1vs1 Stream Feeds met Scanline Shader */
-        .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
-        .stream-card { 
-            background: #080c1a; border-radius: 6px; border: 1px solid rgba(255,255,255,0.04); 
-            position: relative; height: 115px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; 
-        }
-        .stream-card::before {
-            content: " "; display: block; position: absolute; inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 4px, 6px 100%; pointer-events: none;
-        }
-        .stream-card.active-blue { border-color: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); }
-        .stream-card.active-pink { border-color: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
-        
-        .live-pill { position: absolute; top: 6px; left: 6px; background: var(--neon-pink); color: #fff; font-size: 8px; padding: 2px 6px; border-radius: 2px; z-index: 3; font-weight: bold; box-shadow: 0 0 8px var(--neon-pink); }
-        .viewer-pill { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.7); font-size: 8px; padding: 2px 6px; border-radius: 2px; z-index: 3; border: 1px solid rgba(255,255,255,0.1); }
-        .profile-title { font-size: 14px; font-weight: 900; z-index: 3; letter-spacing: 0.5px; }
-        .profile-sub { font-size: 9px; color: var(--neon-orange); font-weight: bold; z-index: 3; font-family: 'Segoe UI', sans-serif; }
-
-        /* Loeistrakke Cubic Bezier Ratio Bar */
-        .ratio-bar-container { background: #050812; padding: 4px 6px; border-radius: 4px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.02); }
-        .track-bar { width: 100%; height: 8px; background: #111628; border-radius: 2px; overflow: hidden; display: flex; }
-        .fill-left { width: 65%; background: linear-gradient(90deg, #0055ff, var(--neon-cyan)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1); }
-        .fill-right { flex: 1; background: linear-gradient(90deg, var(--neon-pink), #aa00ff); box-shadow: 0 0 10px var(--neon-pink); }
-
-        /* Chat Frame */
-        .chat-view-master { 
-            flex: 1; background: rgba(3, 4, 10, 0.97); border-radius: 8px; 
-            border: 1px solid rgba(255,255,255,0.02); padding: 8px; 
-            display: flex; flex-direction: column; gap: 6px; overflow-y: auto; 
-            margin-bottom: 8px; min-height: 140px;
-        }
-        .msg-line { display: flex; flex-direction: column; padding: 6px 10px; border-radius: 4px; background: rgba(255,255,255,0.01); border-left: 3px solid var(--neon-orange); }
-        .msg-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
-
-        /* --- NEXT-LEVEL PRO GAMING INSIGNES (BADGES) --- */
-        .prestige-badge { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 2px; color: #fff; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.15); box-shadow: inset 0 0 4px rgba(0,0,0,0.6); }
-        .badge-lvl-water { background: linear-gradient(135deg, #0033aa, var(--water-glow)); }
-        .badge-lvl-shock { background: linear-gradient(135deg, #b38f00, var(--volt-glow)); animation: microJitter 0.1s infinite; }
-        .badge-lvl-magma { background: linear-gradient(135deg, #880000, var(--magma-glow)); animation: magmaPulse 1s infinite alternate; }
-        
-        /* 👑 ILLEGALE SERVER OVERLORD BADGE CHROOM */
-        .badge-lvl-god { 
-            background: linear-gradient(90deg, #fff 0%, #ffd700 50%, #fff 100%); background-size: 200% auto;
-            animation: chromeScan 1.5s linear infinite; color: #000; font-weight: 900;
-            border: 1px solid #fff; box-shadow: 0 0 15px var(--neon-cyan); letter-spacing: 1px;
+        body {
+            background-color: #000;
+            color: #ffffff;
+            font-family: var(--font-family);
+            overflow: hidden;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* --- EXTREME CHROMATIC CAMO ENGRAVINGS --- */
-        .name-txt { font-weight: 900; font-size: 13px; letter-spacing: 0.5px; }
-        .camo-water { color: var(--water-glow); text-shadow: 0 0 8px rgba(0,210,255,0.5); animation: waterWave 3s ease-in-out infinite alternate; }
-        .camo-shock { color: var(--volt-glow); text-shadow: 0 0 12px var(--volt-glow); animation: microJitter 0.15s infinite; }
-        .camo-magma { color: #ff5555; text-shadow: 0 0 10px var(--magma-glow); background: linear-gradient(90deg, #ff0000, #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* 👑 JOUW MULTI-LAYERED CYBERPUNK GLITCH & DARK MATTER CAMO */
-        .camo-pixelgod {
-            background: linear-gradient(90deg, #ff0077, #7700ff, var(--neon-cyan), #ffbc00, #ff0077); background-size: 300% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: camoShift 2s linear infinite;
-            filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.9)); font-size: 14px; text-transform: uppercase;
+        /* --- MOBILE CONTAINER (MAX 420PX VIEWPORT LOCKED) --- */
+        #nexus-app {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 926px; /* iPhone 13/14/15 Pro Max equivalent ratio */
+            background: linear-gradient(180deg, #070814 0%, var(--bg-main) 100%);
             position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
-        .camo-pixelgod::after {
-            content: attr(data-text); position: absolute; left: 2px; text-shadow: -1px 0 #ff0055;
-            top: 0; color: rgba(255,255,255,0.1); overflow: hidden; clip: rect(0,900px,0,0); 
-            animation: cyberGlitch 2s infinite linear alternate-reverse;
+
+        /* --- SCREEN SHAKE EFFECT INTERFACES --- */
+        @keyframes screen-shake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-3px, 2px) rotate(-1deg); }
+            20% { transform: translate(-1px, -1px) rotate(1deg); }
+            30% { transform: translate(3px, 1px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-2px, 3px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        .shake-active {
+            animation: screen-shake 0.35s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        /* Pure CSS Performance Keyframes */
-        @keyframes camoShift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
-        @keyframes chromeScan { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        @keyframes microJitter { 0% { transform: translate(0.5px, 0.5px); } 100% { transform: translate(-0.5px, -0.5px); } }
-        @keyframes magmaPulse { 0% { filter: brightness(1); } 100% { filter: brightness(1.5); } }
-        @keyframes waterWave { 0% { transform: skewX(-3deg); } 100% { transform: skewX(3deg); } }
-        @keyframes cyberGlitch { 0% { clip: rect(12px, 9999px, 66px, 0); } 100% { clip: rect(34px, 9999px, 55px, 0); } }
+        /* --- WHITE FLASH OVERLAY --- */
+        #flash-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .flash-active {
+            animation: flash-anim 0.4s ease-out;
+        }
+        @keyframes flash-anim {
+            0% { opacity: 0.85; }
+            100% { opacity: 0; }
+        }
 
-        .text-normal { color: #cbd5e1; font-size: 12px; font-family: 'Segoe UI', sans-serif; font-weight: 500; }
-        .text-gift { font-weight: 900; color: #ffea00; font-size: 13px; text-shadow: 0 0 10px #ffea00; text-transform: uppercase; }
+        /* --- HIGH PERFORMANCE PHYSICS CANVAS --- */
+        #physics-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 900;
+        }
 
-        /* Gifts Command Panel Grid */
-        .gift-title { font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px; }
-        .gift-node { background: #070b18; border: 1px solid rgba(255,255,255,0.03); border-radius: 4px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .gift-node:active { transform: scale(0.9); }
-        .gift-avatar { font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
-        .gift-lbl { font-size: 8px; color: #64748b; font-weight: bold; margin-top: 2px; }
-        .gift-val { font-size: 9px; font-weight: 900; color: var(--neon-cyan); }
+        /* --- TOP NAV BAR --- */
+        .header-nav {
+            height: 50px;
+            background: rgba(10, 11, 18, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+        .brand-logo {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #fff, rgba(255,255,255,0.4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .config-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .config-btn:active { background: rgba(255, 255, 255, 0.2); }
 
-        /* Action Node Footers */
-        .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #040712; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.02); }
-        .pot-box { display: flex; flex-direction: column; }
-        .pot-lbl { font-size: 7px; color: #475569; font-weight: bold; }
-        .pot-cash { font-size: 13px; font-weight: 900; }
-        .c-blue { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0,255,204,0.3); } 
-        .c-pink { color: var(--neon-pink); text-shadow: 0 0 6px rgba(255,0,85,0.3); }
+        /* --- LIVE COMBAT ARENA (PVP STREAMS) --- */
+        .pvp-arena {
+            height: 190px;
+            display: flex;
+            position: relative;
+            background: #000;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+        .stream-box {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stream-box-1 { background: linear-gradient(45deg, #120505, #260909); }
+        .stream-box-2 { background: linear-gradient(45deg, #050d1a, #0a1931); }
+
+        .stream-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+        }
+        .stream-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 2px solid;
+            object-fit: cover;
+        }
+        .stream-box-1 .stream-avatar { border-color: var(--neon-red); box-shadow: 0 0 15px rgba(255,51,51,0.4); }
+        .stream-box-2 .stream-avatar { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
+
+        .streamer-name {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .viewer-count {
+            font-size: 9px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 6px;
+            border-radius: 20px;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .viewer-count::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: #00ff66;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Scanline Overlay & Grid */
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.8;
+        }
+
+        /* Power Ratio Bar */
+        .ratio-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #222;
+            z-index: 10;
+            display: flex;
+        }
+        .ratio-bar-1 {
+            width: var(--pot-1-fill);
+            height: 100%;
+            background: linear-gradient(90deg, #ff0055, var(--neon-red));
+            box-shadow: 0 0 10px var(--neon-red);
+            transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        .ratio-bar-2 {
+            flex: 1;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), #0055ff);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* VS Center Tag */
+        .vs-tag {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 900;
+            font-style: italic;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            z-index: 20;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        /* --- VOTE POTS DISPLAY --- */
+        .pots-dashboard {
+            display: flex;
+            background: rgba(14, 15, 23, 0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 6px 12px;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .pot-val-1 { color: var(--neon-red); text-shadow: 0 0 5px rgba(255,51,51,0.3); }
+        .pot-val-2 { color: var(--neon-cyan); text-shadow: 0 0 5px rgba(0,242,254,0.3); }
+
+        /* --- CHAT ENGINE CONTAINER --- */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(5, 5, 8, 0.6);
+            scroll-behavior: smooth;
+        }
+        .chat-container::-webkit-scrollbar { display: none; }
+
+        .chat-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px 8px;
+            border-radius: 6px;
+            border-left: 2px solid transparent;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* --- SERVER OVERLORD GRMRYZEN-PIXELGOD EFFECTS --- */
+        .chat-row.overlord-row {
+            background: rgba(20, 10, 35, 0.35);
+            border-left: 2px solid #9d4edd;
+            box-shadow: inset 0 0 10px rgba(157, 78, 221, 0.1);
+        }
+
+        /* 240Hz RGB-Wave & Glitch */
+        .overlord-name {
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg, #ff0055, #9d4edd, #00f2fe, #ffee00, #ff0055);
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: dark-matter-wave 3s linear infinite, overlord-glitch 4s infinite;
+        }
+
+        @keyframes dark-matter-wave {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        @keyframes overlord-glitch {
+            0%, 95%, 100% { text-shadow: 0 0 8px rgba(157,78,221,0.6); }
+            96% { text-shadow: -2px -1px 0 rgba(255,0,85,0.8), 2px 1px 0 rgba(0,242,254,0.8); }
+            97% { text-shadow: 2px -2px 0 rgba(255,0,85,0.8), -1px 2px 0 rgba(0,242,254,0.8); }
+            99% { text-shadow: -1px 1px 0 rgba(255,255,0,0.8), 1px -1px 0 rgba(157,78,221,0.8); }
+        }
+
+        /* Chroom Insigne Badge */
+        .badge-overlord {
+            background: linear-gradient(135deg, #1a1a1a 0%, #eeeeee 45%, #555555 55%, #ffffff 70%, #111111 100%);
+            background-size: 300% 300%;
+            color: #000;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 2px 5px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+            text-shadow: none;
+            box-shadow: 0 0 8px rgba(255,255,255,0.4);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            align-self: center;
+            animation: chrome-scan 2.5s linear infinite;
+        }
+
+        @keyframes chrome-scan {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* --- DYNAMIC GAMING CLASSES BADGES & NAMES --- */
+        /* Aqua Klasse (Lvl 1-20) */
+        .badge-aqua {
+            background: rgba(0, 242, 254, 0.15);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            box-shadow: inset 0 0 4px rgba(0,242,254,0.5);
+        }
+        .name-aqua {
+            color: #e0faff;
+            font-weight: 700;
+            text-shadow: 0 0 6px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Volt Klasse (Lvl 21-49) */
+        .badge-volt {
+            background: rgba(255, 238, 0, 0.15);
+            border: 1px solid var(--neon-yellow);
+            color: var(--neon-yellow);
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            box-shadow: inset 0 0 4px rgba(255,238,0,0.5);
+        }
+        .name-volt {
+            color: #fffae0;
+            font-weight: 700;
+            animation: volt-jitter 0.15s infinite;
+            display: inline-block;
+        }
+        @keyframes volt-jitter {
+            0%, 100% { transform: translate(0, 0) scale(1); text-shadow: 0 0 6px var(--neon-yellow); }
+            20% { transform: translate(-0.5px, 0.5px) scale(1); }
+            40% { transform: translate(0.5px, -0.5px) scale(0.99); text-shadow: 0 0 10px var(--neon-yellow), 0 0 2px #fff; }
+            60% { transform: translate(-0.5px, -0.5px) scale(1); }
+            80% { transform: translate(0.5px, 0.5px) scale(1.01); }
+        }
+
+        /* Magma Klasse (Lvl 50+) */
+        .badge-magma {
+            background: rgba(255, 51, 51, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            font-size: 8px;
+            font-weight: 800;
+            padding: 1px 4px;
+            border-radius: 3px;
+            box-shadow: inset 0 0 6px rgba(255,51,51,0.6);
+        }
+        .name-magma {
+            color: #ffcccccc;
+            font-weight: 800;
+            animation: magma-pulse 2s infinite ease-in-out;
+        }
+        @keyframes magma-pulse {
+            0%, 100% { text-shadow: 0 0 4px var(--neon-red), 0 0 1px linear-gradient(#ff3333, #ffaa00); color: #ffcccc; }
+            50% { text-shadow: 0 0 12px var(--neon-red), 0 0 6px #ff6600; color: #ffffff; }
+        }
+
+        .chat-msg {
+            color: rgba(255,255,255,0.85);
+            word-break: break-word;
+        }
+
+        /* --- KILLSTREAK ALERT BANNER --- */
+        #killstreak-banner {
+            position: absolute;
+            top: -120px;
+            left: 5%;
+            width: 90%;
+            background: linear-gradient(135deg, rgba(163, 0, 0, 0.95) 0%, rgba(50, 0, 0, 0.95) 100%);
+            border: 2px solid var(--neon-red);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.6), inset 0 0 15px rgba(255,255,255,0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+            opacity: 0;
+        }
+        #killstreak-banner.banner-active {
+            transform: translateY(180px);
+            opacity: 1;
+        }
+        .ks-title {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px rgba(255,238,0,0.6);
+            animation: pulse 0.5s infinite alternate;
+        }
+        .ks-desc {
+            font-size: 10px;
+            color: #fff;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        /* --- INTERACTIVE ACTION PAD (GIFTING & BOOSTS) --- */
+        .action-pad {
+            background: rgba(10, 11, 18, 0.95);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+            padding-bottom: calc(14px + env(safe-area-inset-bottom));
+        }
+
+        /* PvP Boost Triggers */
+        .boost-row {
+            display: flex;
+            gap: 8px;
+        }
+        .boost-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .boost-btn-1 {
+            background: linear-gradient(135deg, #cc0044 0%, #ff3333 100%);
+            border: 1px solid rgba(255,51,51,0.4);
+        }
+        .boost-btn-2 {
+            background: linear-gradient(135deg, #0055ff 0%, #00f2fe 100%);
+            border: 1px solid rgba(0,242,254,0.4);
+        }
+        .boost-btn:active { transform: scale(0.96); }
+
+        /* Premium Gift Grid */
+        .gifts-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        .gift-node {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .gift-node:active {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--neon-cyan);
+        }
+        .gift-icon { font-size: 20px; margin-bottom: 2px; }
+        .gift-label { font-size: 9px; color: #888; font-weight: 600; }
+        .gift-cost { font-size: 9px; color: var(--neon-yellow); font-weight: 700; margin-top: 1px; }
+
+        /* --- CONTROL CENTER / ENGINE OVERLAY --- */
+        #control-center {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.98);
+            z-index: 2000;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        #control-center.cc-open { transform: translateY(0); }
+
+        .cc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 12px;
+        }
+        .cc-title { font-size: 16px; font-weight: 900; letter-spacing: 1px; color: var(--neon-cyan); }
+        .cc-close-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+
+        .config-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .config-group label { font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 0.5px; font-weight: 700; }
+        .config-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-family: var(--font-family);
+        }
+        .config-input:focus { border-color: var(--neon-cyan); outline: none; }
         
-        .action-btn { border: none; padding: 12px 2px; font-weight: 900; font-size: 11px; border-radius: 4px; cursor: pointer; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; }
-        .btn-blue { background: linear-gradient(135deg, var(--neon-cyan), #0055ff); color: #000; box-shadow: 0 0 14px rgba(0,255,204,0.3); }
-        .btn-pink { background: linear-gradient(135deg, var(--neon-pink), #7700ff); box-shadow: 0 0 14px rgba(255,0,85,0.3); }
+        .pot-sliders { display: flex; gap: 10px; }
+        .pot-sliders input { flex: 1; accent-color: var(--neon-cyan); }
 
-        /* ⚙️ FULL-SCREEN MILITARY SETTINGS OVERLAY */
-        .settings-screen { 
-            position: absolute; inset: 0; background: rgba(2, 3, 7, 0.99); 
-            z-index: 995; display: none; flex-direction: column; padding: 24px;
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .settings-title { font-size: 22px; color: var(--neon-orange); font-style: italic; border-bottom: 2px solid var(--neon-orange); padding-bottom: 8px; margin-bottom: 24px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.4); }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.04); }
-        .setting-lbl { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        .setting-input { background: #090e1f; border: 1px solid var(--neon-orange); color: #fff; padding: 8px; border-radius: 4px; font-weight: bold; width: 160px; text-align: center; font-size: 13px; outline: none; }
-        .setting-input:focus { border-color: #fff; box-shadow: 0 0 8px var(--neon-orange); }
-        
-        /* Premium Custom Toggle Switch */
-        .switch-box { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch-box input { opacity: 0; width: 0; height: 0; }
-        .slider-chk { position: absolute; cursor: pointer; inset: 0; background-color: #1e293b; transition: .3s; border-radius: 24px; }
-        .slider-chk:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider-chk { background-color: var(--neon-cyan); }
-        input:checked + .slider-chk:before { transform: translateX(22px); }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333; transition: .3s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--neon-cyan); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-        .close-btn { background: linear-gradient(90deg, var(--neon-orange), var(--neon-pink)); color: #fff; border: none; padding: 14px; border-radius: 4px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: auto; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,85,0,0.3); }
+        /* --- FX OVERDRIVE DISABLED MODE (PERFORMANCE OPTIMIZATION) --- */
+        body.fx-disabled .overlord-name { animation: dark-matter-wave 10s linear infinite; text-shadow: none !important; }
+        body.fx-disabled .name-volt { animation: none; text-shadow: none !important; }
+        body.fx-disabled .name-magma { animation: none; text-shadow: none !important; }
+        body.fx-disabled .stream-avatar { box-shadow: none !important; }
+        body.fx-disabled .ratio-bar-1, body.fx-disabled .ratio-bar-2 { box-shadow: none !important; }
 
-        /* Structural Fixed Footer Links */
-        .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #02040a; border-top: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 12px; font-weight: bold; cursor: pointer; width: 50%; text-align: center; height: 100%; justify-content: center; transition: 0.2s; }
-        .nav-link.active-link { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); background: rgba(255,85,0,0.02); }
     </style>
 </head>
 <body>
 
-    <div class="flash-overlay" id="flashFx"></div>
+    <div id="nexus-app">
+        <div id="flash-overlay"></div>
+        <canvas id="physics-canvas"></canvas>
 
-    <div class="phone-container" id="shell">
-        
-        <canvas id="fxCanvas"></canvas>
+        <header class="header-nav">
+            <div class="brand-logo">NEXUS</div>
+            <button class="config-btn" onclick="toggleControlCenter(true)">CONFIG ⚙️</button>
+        </header>
 
-        <div class="killstreak-banner" id="ksAlert">
-            <div class="ks-title" id="ksTitle">TACTICAL NUKE</div>
-            <div class="ks-sub" id="ksSub">STREAK BROUGHT BY OPERATOR</div>
+        <section class="pvp-arena">
+            <div class="scanlines"></div>
+            <div class="vs-tag">VS</div>
+            
+            <div class="stream-box stream-box-1">
+                <div class="stream-placeholder">
+                    <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&auto=format&fit=crop&q=60" class="stream-avatar" alt="Streamer 1">
+                    <span class="streamer-name">Marouane_Live</span>
+                    <span class="viewer-count" id="viewers-1">14.2K</span>
+                </div>
+            </div>
+
+            <div class="stream-box stream-box-2">
+                <div class="stream-placeholder">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=60" class="stream-avatar" alt="Streamer 2">
+                    <span class="streamer-name">Anas_PvP</span>
+                    <span class="viewer-count" id="viewers-2">18.9K</span>
+                </div>
+            </div>
+
+            <div class="ratio-container">
+                <div class="ratio-bar-1" id="ratio-bar-1"></div>
+                <div class="ratio-bar-2"></div>
+            </div>
+        </section>
+
+        <div class="pots-dashboard">
+            <div>POT 01: <span class="pot-val-1" id="pot-display-1">€2,450</span></div>
+            <div>POT 02: <span class="pot-val-2" id="pot-display-2">€2,450</span></div>
         </div>
 
-        <div class="settings-screen" id="settingsPanel">
-            <div class="settings-title">⚙️ TACTICAL CONFIG CENTER</div>
-            <div class="setting-row">
-                <span class="setting-lbl">OPERATOR GAMERTAG</span>
-                <input type="text" class="setting-input" id="cfgUsername" value="grmryzen-pixelGOD">
+        <main class="chat-container" id="chat-box">
+            </main>
+
+        <div id="killstreak-banner">
+            <div class="ks-title">⚡ KILLSTREAK MEGA GIFT ⚡</div>
+            <div class="ks-desc" id="ks-desc-text">OPERATOR grmryzen-pixelGOD JANKT EEN SUPREME GIFT DE ARENA IN!</div>
+        </div>
+
+        <footer class="action-pad">
+            <div class="boost-row">
+                <button class="boost-btn boost-btn-1" onclick="executeBoost(1)">Boost Marouane</button>
+                <button class="boost-btn boost-btn-2" onclick="executeBoost(2)">Boost Anas</button>
             </div>
-            <div class="setting-row">
-                <span class="setting-lbl">MANIPULEER NODE 01 POT (€)</span>
-                <input type="number" class="setting-input" id="cfgPotA" value="7340">
+
+            <div class="gifts-grid">
+                <div class="gift-node" onclick="fireGiftEvent(event, '⚡', 'HYPER DRIVE', 250)">
+                    <span class="gift-icon">⚡</span>
+                    <span class="gift-label">Volt Charge</span>
+                    <span class="gift-cost">250 Cr.</span>
+                </div>
+                <div class="gift-node" onclick="fireGiftEvent(event, '💎', 'DIAMOND DROP', 500)">
+                    <span class="gift-icon">💎</span>
+                    <span class="gift-label">Pure Diamond</span>
+                    <span class="gift-cost">500 Cr.</span>
+                </div>
+                <div class="gift-node" onclick="fireGiftEvent(event, '👑', 'OVERLORD KING', 1000)">
+                    <span class="gift-icon">👑</span>
+                    <span class="gift-label">Crown Apex</span>
+                    <span class="gift-cost">1000 Cr.</span>
+                </div>
+                <div class="gift-node" onclick="fireGiftEvent(event, '🔮', 'DARK MATTER', 2500)">
+                    <span class="gift-icon">🔮</span>
+                    <span class="gift-label">Singularity</span>
+                    <span class="gift-cost">2500 Cr.</span>
+                </div>
             </div>
-            <div class="setting-row">
-                <span class="setting-lbl">CHAT FEED TIMEOUT</span>
-                <select class="setting-input" id="cfgSpeed">
-                    <option value="1200">RAPID APEX (1.2s)</option>
-                    <option value="2500">NORMAL PACE (2.5s)</option>
-                    <option value="4000">SLOW MOTION (4.0s)</option>
-                </select>
+        </footer>
+
+        <div id="control-center">
+            <div class="cc-header">
+                <div class="cc-title">NEXUS CONTROL SYSTEM</div>
+                <button class="cc-close-btn" onclick="toggleControlCenter(false)">✕</button>
             </div>
-            <div class="setting-row">
-                <span class="setting-lbl">FX OVERDRIVE MODE (GLOWS)</span>
-                <label class="switch-box">
-                    <input type="checkbox" id="cfgOverdrive" checked onchange="toggleOverdriveEngine()">
-                    <span class="slider-chk"></span>
+
+            <div class="config-group">
+                <label>Operator Gamertag</label>
+                <input type="text" id="cfg-username" class="config-input" value="grmryzen-pixelGOD" oninput="updateSystemState()">
+            </div>
+
+            <div class="config-group">
+                <label>Pot Manipulator (P1 / P2)</label>
+                <div class="pot-sliders">
+                    <input type="range" id="cfg-pot1" min="100" max="10000" step="50" value="2500" oninput="updateSystemState()">
+                    <input type="range" id="cfg-pot2" min="100" max="10000" step="50" value="2500" oninput="updateSystemState()">
+                </div>
+            </div>
+
+            <div class="config-group">
+                <label>Chat Interval Speed</label>
+                <input type="range" id="cfg-chatspeed" min="200" max="3000" step="50" value="1000" onchange="restartChatEngine()">
+                <div style="font-size:10px; color:#666; text-align:right;" id="speed-indicator">1000ms</div>
+            </div>
+
+            <div class="toggle-container">
+                <span style="font-size: 12px; font-weight:700;">FX OVERDRIVE (MAX GLOWS)</span>
+                <label class="switch">
+                    <input type="checkbox" id="cfg-fx" checked onchange="updateSystemState()">
+                    <span class="slider"></span>
                 </label>
             </div>
-            <button class="close-btn" onclick="applyTacticalSettings()">COMMIT ENGINE CHANGES</button>
-        </div>
-
-        <div class="app-header">
-            <span class="logo-text">NEXUS OPERATOR</span>
-            <div class="owner-cash" id="walletDisplay">WALLET: €3450.00</div>
-        </div>
-
-        <div class="view-segment">
-            
-            <div class="live-arena-grid">
-                <div class="stream-card active-blue" id="boxA">
-                    <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 12.8K</div>
-                    <div class="profile-title">Marouane_Live</div>
-                    <div class="profile-sub">PRESTIGE MASTER</div>
-                </div>
-                <div class="stream-card" id="boxB">
-                    <div class="live-pill">LIVE</div>
-                    <div class="viewer-pill">👁️ 3.4K</div>
-                    <div class="profile-title">Anas_PvP</div>
-                    <div class="profile-sub">ELITE COMMANDO</div>
-                </div>
-            </div>
-
-            <div class="ratio-bar-container">
-                <div class="track-bar">
-                    <div class="fill-left" id="powerRatioA" style="width: 65%;"></div>
-                    <div class="fill-right"></div>
-                </div>
-            </div>
-
-            <div class="chat-view-master" id="chatFlow">
-                <div class="msg-line" style="border-left-color: #00d2ff;">
-                    <div class="msg-meta">
-                        <span class="prestige-badge badge-lvl-water">💧 LVL 18</span>
-                        <span class="name-txt camo-water">Mo_BlackOps</span>
-                    </div>
-                    <span class="text-normal">Niemand kan tippen aan de V13 engine wtf!! 🔥</span>
-                </div>
-            </div>
-
-            <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
-            <div class="gift-row">
-                <div class="gift-node" onclick="triggerAdvancedGift(event, '⚡', 'RC-XD Shock', 10)">
-                    <span class="gift-avatar">⚡</span>
-                    <span class="gift-lbl">RC-XD Shock</span>
-                    <span class="gift-val">€10</span>
-                </div>
-                <div class="gift-node" onclick="triggerAdvancedGift(event, '🔮', 'UAV Aura', 25)">
-                    <span class="gift-avatar">🔮</span>
-                    <span class="gift-lbl">UAV Aura</span>
-                    <span class="gift-val">€25</span>
-                </div>
-                <div class="gift-node" onclick="triggerAdvancedGift(event, '👑', 'Chopper VIP', 50)">
-                    <span class="gift-avatar">👑</span>
-                    <span class="gift-lbl">Chopper VIP</span>
-                    <span class="gift-val">€50</span>
-                </div>
-                <div class="gift-node" onclick="triggerAdvancedGift(event, '🚀', 'MOAB NUKE', 100)">
-                    <span class="gift-avatar">🚀</span>
-                    <span class="gift-lbl">MOAB NUKE</span>
-                    <span class="gift-val">€100</span>
-                </div>
-            </div>
-
-            <div class="controls-row">
-                <div class="pot-box">
-                    <span class="pot-lbl">POT 01</span>
-                    <span class="pot-cash c-blue" id="potDisplayA">€7340</span>
-                </div>
-                <button class="action-btn btn-blue" onclick="sendCustomBoost(event, 'A')">BOOST NODE 01</button>
-                <button class="action-btn btn-pink" onclick="sendCustomBoost(event, 'B')">BOOST NODE 02</button>
-                <div class="pot-box" style="text-align: right;">
-                    <span class="pot-lbl">POT 02</span>
-                    <span class="pot-cash c-pink" id="potDisplayB">€3920</span>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="bottom-navbar">
-            <div class="nav-link active-link" id="navStage" onclick="toggleNavInterface(false)"><span>STAGE LINK</span></div>
-            <div class="nav-link" id="navConfig" onclick="toggleNavInterface(true)"><span>CONFIG ⚙️</span></div>
         </div>
 
     </div>
 
-    <script {isCodeAccessible=true}>
-        let pA = 7340;
-        let pB = 3920;
-        let wallet = 3450.00;
+    <script>
+        // --- RUNTIME APPLICATION STATE ---
+        const STATE = {
+            operatorName: "grmryzen-pixelGOD",
+            pot01: 2500,
+            pot02: 2500,
+            chatIntervalSpeed: 1000,
+            fxOverdrive: true
+        };
+
+        // --- SIMULATED USER DATABASE FOR CHAT ENGINE ---
+        const CHAT_USERS = [
+            { name: "X-CyberPulse", class: "aqua", lvl: 14 },
+            { name: "VortexRider", class: "aqua", lvl: 4 },
+            { name: "NeonNinja", class: "aqua", lvl: 19 },
+            { name: "Volt_Striker", class: "volt", lvl: 34 },
+            { name: "HyperJolt", class: "volt", lvl: 42 },
+            { name: "QuantumJester", class: "volt", lvl: 28 },
+            { name: "MagmaLord_X", class: "magma", lvl: 88 },
+            { name: "InfernoSlayer", class: "magma", lvl: 56 },
+            { name: "Krypton_God", class: "magma", lvl: 99 }
+        ];
+
+        const CHAT_PHRASES = [
+            "YOOOO wat een absurde combat hiero! 🔥",
+            "Marouane gaat dit echt clean winnen sws",
+            "Anas clutched dit sowieso aan het einde, let maar op!",
+            "Wtf die multiplier gaat hard omhoog!! 🚀",
+            "Wie gooit die dikke gifts??",
+            "NEXUS is echt next level vloeibaar op dit scherm.",
+            "GG, dit is de vetste stream van de maand man.",
+            "BOOST DIE POT JONGENS!! 📈"
+        ];
+
+        let chatEngineTicker = null;
+
+        // --- CANVAS HIGH PERFORMANCE PHYSICS SETUP ---
+        const canvas = document.getElementById('physics-canvas');
+        const ctx = canvas.getContext('2d');
         let particles = [];
-        let chatLoopEngine = null;
-        let speedSetting = 2500;
 
-        const canvas = document.getElementById("fxCanvas");
-        const ctx = canvas.getContext("2d");
-
-        function adjustScreenCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+        function resizeCanvas() {
+            const container = document.getElementById('nexus-app');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
         }
-        window.addEventListener('resize', adjustScreenCanvas);
-        adjustScreenCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        // 🧠 VECTOR PHYSICS ENGINE FOR GIFT SPARKLES
-        function deployVectorExplosion(originX, originY, symbol, amount) {
-            for(let i=0; i<amount; i++) {
-                let angle = (Math.random() * Math.PI * 2);
-                let speed = Math.random() * 8 + 4;
-                particles.push({
-                    x: originX,
-                    y: originY,
-                    vx: Math.cos(angle) * speed,
-                    vy: -(Math.random() * 10 + 5), // Geforceerde opwaartse thrust vector
-                    size: Math.random() * 16 + 18,
-                    icon: symbol,
-                    alpha: 1,
-                    spin: Math.random() * 0.1 - 0.05,
-                    rotation: Math.random() * Math.PI,
-                    drag: 0.98,
-                    gravity: 0.25
-                });
+        class PhysicsParticle {
+            constructor(x, y, charType) {
+                this.x = x;
+                this.y = y;
+                this.type = charType; // Can be emoji or vector shape
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 4;
+                
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed - 3; // Initial burst upward
+                this.gravity = 0.28;
+                this.drag = 0.97;
+                this.alpha = 1.0;
+                this.decay = Math.random() * 0.015 + 0.01;
+                this.rotation = Math.random() * Math.PI;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+                this.size = Math.random() * 14 + 14;
+                
+                // Neon vector color configurations
+                const colors = ['#00f2fe', '#ff3333', '#ffee00', '#4facfe', '#ff0055'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
             }
-        }
 
-        function renderFrameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for(let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.vx *= p.drag;
-                p.vy += p.gravity;
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.014;
-                p.rotation += p.spin;
+            update() {
+                this.vx *= this.drag;
+                this.vy *= this.drag;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rotation += this.rotationSpeed;
+                this.alpha -= this.decay;
+            }
 
+            draw() {
                 ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation);
-                ctx.font = `${p.size}px Impact`;
-                ctx.fillStyle = "#ffffff";
-                ctx.shadowColor = varColorLookup(p.icon);
-                ctx.shadowBlur = 15;
-                ctx.fillText(p.icon, -p.size/2, p.size/2);
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                
+                if (this.type.length > 1 || this.type.match(/\p{Emoji}/u)) {
+                    // Draw emoji gift particle
+                    ctx.font = `${this.size}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(this.type, 0, 0);
+                } else {
+                    // Draw specialized high-velocity neon laser vectors
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(-10, 0);
+                    ctx.lineTo(10, 0);
+                    ctx.stroke();
+                }
                 ctx.restore();
+            }
+        }
 
-                if(p.alpha <= 0 || p.y > canvas.height) {
+        function enginePhysicsLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                if (particles[i].alpha <= 0) {
                     particles.splice(i, 1);
+                } else {
+                    particles[i].draw();
                 }
             }
-            requestAnimationFrame(renderFrameLoop);
+            requestAnimationFrame(enginePhysicsLoop);
         }
-        renderFrameLoop();
+        requestAnimationFrame(enginePhysicsLoop);
 
-        function varColorLookup(icon) {
-            if(icon === '⚡') return "#ffea00";
-            if(icon === '🔮') return "#00ffcc";
-            if(icon === '👑') return "#ff0055";
-            return "#ff5500";
-        }
+        // --- CORE FUNCTIONAL METHODS ---
 
-        function triggerHardImpact() {
-            let flash = document.getElementById("flashFx");
-            flash.style.animation = "strikeFlash 0.2s ease-out";
-            let container = document.getElementById("shell");
-            container.style.animation = "screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both";
-            setTimeout(() => { flash.style.animation = ""; container.style.animation = ""; }, 400);
-        }
-
-        // ADVANCED GIFT INTERACTION WITH COORDINATE TRACING
-        function triggerAdvancedGift(event, symbol, name, cost) {
-            let rect = canvas.getBoundingClientRect();
-            let clickX = event.clientX - rect.left;
-            let clickY = event.clientY - rect.top;
-
-            triggerHardImpact();
-            deployVectorExplosion(clickX, clickY, symbol, 38);
-
-            wallet += cost;
-            document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
-
-            // Trigger Massive Drop Banner Alert
-            let alertBox = document.getElementById("ksAlert");
-            document.getElementById("ksTitle").innerText = `💥 ${name.toUpperCase()} LAUNCHED`;
-            document.getElementById("ksSub").innerText = "TACTICAL REINFORCEMENTS ACQUIRED BY OVERLORD";
-            alertBox.classList.add("active-banner");
-
-            setTimeout(() => { alertBox.classList.remove("active-banner"); }, 2500);
-
-            let masterUser = document.getElementById("cfgUsername").value;
-            executeChatLog(masterUser, `ACQUIRED HIGH-TIER COMMAND KILLSTREAK: ${symbol} ${name.toUpperCase()}!`, true, true);
-        }
-
-        function sendCustomBoost(event, terminal) {
-            let rect = canvas.getBoundingClientRect();
-            triggerHardImpact();
-            deployVectorExplosion(event.clientX - rect.left, event.clientY - rect.top, '⚡', 15);
-
-            if(terminal === 'A') {
-                pA += 240;
-                document.getElementById("potDisplayA").innerText = "€" + pA;
-                document.getElementById("boxA").classList.add("active-blue");
-                document.getElementById("boxB").classList.remove("active-pink");
-            } else {
-                pB += 240;
-                document.getElementById("potDisplayB").innerText = "€" + pB;
-                document.getElementById("boxB").classList.add("active-pink");
-                document.getElementById("boxA").classList.remove("active-blue");
-            }
-
-            let sum = pA + pB;
-            document.getElementById("powerRatioA").style.width = ((pA / sum) * 100) + "%";
-
-            let masterUser = document.getElementById("cfgUsername").value;
-            executeChatLog(masterUser, `ENGAGED DIRECT FUNDING OVERRIDE ON TERMINAL 0${terminal === 'A' ? '1':'2'}.`, true, false);
-        }
-
-        // SETTINGS DISPATCHERS
-        function toggleNavInterface(activateMenu) {
-            document.getElementById("settingsPanel").style.display = activateMenu ? "flex" : "none";
-            document.getElementById("navConfig").classList.toggle("active-link", activateMenu);
-            document.getElementById("navStage").classList.toggle("active-link", !activateMenu);
-        }
-
-        function toggleOverdriveEngine() {
-            let container = document.getElementById("shell");
-            let enabled = document.getElementById("cfgOverdrive").checked;
-            if(!enabled) {
-                container.classList.add("fx-disabled");
-            } else {
-                container.classList.remove("fx-disabled");
+        function initChatEngine() {
+            restartChatEngine();
+            // Seed initiele berichten
+            for(let i=0; i<6; i++) {
+                injectSimulatedChat();
             }
         }
 
-        function applyTacticalSettings() {
-            pA = parseInt(document.getElementById("cfgPotA").value) || pA;
-            document.getElementById("potDisplayA").innerText = "€" + pA;
-            
-            let sum = pA + pB;
-            document.getElementById("powerRatioA").style.width = ((pA / sum) * 100) + "%";
-
-            speedSetting = parseInt(document.getElementById("cfgSpeed").value);
-            clearInterval(chatLoopEngine);
-            initiateAutomatedStreams();
-
-            toggleNavInterface(false);
+        function restartChatEngine() {
+            if (chatEngineTicker) clearInterval(chatEngineTicker);
+            const speed = parseInt(document.getElementById('cfg-chatspeed').value);
+            document.getElementById('speed-indicator').innerText = speed + "ms";
+            STATE.chatIntervalSpeed = speed;
+            chatEngineTicker = setInterval(injectSimulatedChat, STATE.chatIntervalSpeed);
         }
 
-        function executeChatLog(sender, text, isGod, isGift) {
-            let chatBox = document.getElementById("chatFlow");
-            let block = document.createElement("div");
-            block.className = "msg-line";
+        function injectSimulatedChat() {
+            const chatBox = document.getElementById('chat-box');
+            const randomUser = CHAT_USERS[Math.floor(Math.random() * CHAT_USERS.length)];
+            const randomPhrase = CHAT_PHRASES[Math.floor(Math.random() * CHAT_PHRASES.length)];
 
-            if (isGod) {
-                block.className = "msg-line owner-line";
-                block.style.borderLeft = "4px solid var(--neon-cyan)";
-                block.style.background = "linear-gradient(90deg, rgba(0,255,204,0.08) 0%, transparent 100%)";
-                block.innerHTML = `
-                    <div class="msg-meta">
-                        <span class="prestige-badge badge-lvl-god">👑 OVERLORD</span>
-                        <span class="name-txt camo-pixelgod" data-text="${sender}">${sender}</span>
-                    </div>
-                    <span class="${isGift ? 'text-gift' : 'text-normal'}" style="color: #fff; font-weight: bold;">${text}</span>
-                `;
-            } else {
-                let rng = Math.random();
-                let badgeStyle = "badge-lvl-water";
-                let camoStyle = "camo-water";
-                let prefix = "💧 LVL " + Math.floor(Math.random() * 19 + 1);
-                block.style.borderLeftColor = "var(--water-glow)";
+            let badgeHtml = '';
+            let nameClass = '';
 
-                if (rng > 0.4 && rng <= 0.8) {
-                    badgeStyle = "badge-lvl-shock";
-                    camoStyle = "camo-shock";
-                    prefix = "⚡ LVL " + Math.floor(Math.random() * 28 + 21);
-                    block.style.borderLeftColor = "var(--volt-glow)";
-                } else if (rng > 0.8) {
-                    badgeStyle = "badge-lvl-magma";
-                    camoStyle = "camo-magma";
-                    prefix = "🔥 MASTER " + Math.floor(Math.random() * 50 + 50);
-                    block.style.borderLeftColor = "var(--magma-glow)";
-                }
-
-                block.innerHTML = `
-                    <div class="msg-meta">
-                        <span class="prestige-badge ${badgeStyle}">${prefix}</span>
-                        <span class="name-txt ${camoStyle}">${sender}</span>
-                    </div>
-                    <span class="text-normal">${text}</span>
-                `;
+            if (randomUser.class === 'aqua') {
+                badgeHtml = `<span class="badge-aqua">LVL ${randomUser.lvl}</span>`;
+                nameClass = 'name-aqua';
+            } else if (randomUser.class === 'volt') {
+                badgeHtml = `<span class="badge-volt">⚡ LVL ${randomUser.lvl}</span>`;
+                nameClass = 'name-volt';
+            } else if (randomUser.class === 'magma') {
+                badgeHtml = `<span class="badge-magma">🔥 PRESTIGE ${randomUser.lvl}</span>`;
+                nameClass = 'name-magma';
             }
 
-            chatBox.appendChild(block);
+            const row = document.createElement('div');
+            row.className = 'chat-row';
+            row.innerHTML = `
+                ${badgeHtml}
+                <span class="${nameClass}">${randomUser.name}:</span>
+                <span class="chat-msg">${randomPhrase}</span>
+            `;
+            chatBox.appendChild(row);
+            autoScrollChat();
+        }
+
+        function injectOverlordMessage(giftName) {
+            const chatBox = document.getElementById('chat-box');
+            const row = document.createElement('div');
+            row.className = 'chat-row overlord-row';
+            row.innerHTML = `
+                <span class="badge-overlord">SERVER OVERLORD</span>
+                <span class="overlord-name">${STATE.operatorName}:</span>
+                <span class="chat-msg" style="color: var(--neon-yellow); font-weight: 700;">Gooit een ULTRA PREMIUM [${giftName}] cadeau in de arena!!! 🔥🚀</span>
+            `;
+            chatBox.appendChild(row);
+            autoScrollChat();
+        }
+
+        function autoScrollChat() {
+            const chatBox = document.getElementById('chat-box');
+            if (chatBox.children.length > 40) {
+                chatBox.removeChild(chatBox.firstChild);
+            }
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function initiateAutomatedStreams() {
-            chatLoopEngine = setInterval(() => {
-                const names = ["Riffi_Commando", "Tarifit_Warrior", "Sniper_Elite", "Mo_VoltEdge", "Magma_PvP"];
-                const messages = ["Gooi die nuke dan!", "Kijk die vector physics vliegen wtf!", "V13 is te gevaarlijk bro", "Wie boost Node 02?"];
-                let u = names[Math.floor(Math.random() * names.length)];
-                let m = messages[Math.floor(Math.random() * messages.length)];
-                executeChatLog(u, m, false, false);
-            }, speedSetting);
+        // --- HARDCORE EVENT EXECUTIONERS ---
+
+        function fireGiftEvent(event, emoji, giftName, value) {
+            // Verkrijg exacte x/y coördinaten van de click
+            const rect = canvas.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickY = event.clientY - rect.top;
+
+            // Genereer 35+ high-velocity vector & emoji deeltjes
+            for (let i = 0; i < 20; i++) {
+                particles.push(new PhysicsParticle(clickX, clickY, emoji));
+            }
+            for (let i = 0; i < 20; i++) {
+                particles.push(new PhysicsParticle(clickX, clickY, '|'));
+            }
+
+            // Update data state willekeurig verdeeld over een pot
+            if(Math.random() > 0.5) {
+                STATE.pot01 += value;
+            } else {
+                STATE.pot02 += value;
+            }
+            syncUIVisuals();
+
+            // Injecteer direct in de chat engine
+            injectOverlordMessage(giftName);
+
+            // Activeer Killstreak Banner, Screenshake & Flash Overdrive
+            triggerKillstreakAlert(giftName);
         }
-        initiateAutomatedStreams();
+
+        function triggerKillstreakAlert(giftName) {
+            const banner = document.getElementById('killstreak-banner');
+            const desc = document.getElementById('ks-desc-text');
+            const app = document.getElementById('nexus-app');
+            const flash = document.getElementById('flash-overlay');
+
+            desc.innerText = `OPERATOR ${STATE.operatorName} SASHES EEN SUPREME [${giftName}] DE ARENA IN!`;
+            
+            // CSS Rammel & Banner activatie
+            banner.classList.add('banner-active');
+            if(STATE.fxOverdrive) {
+                app.classList.add('shake-active');
+                flash.classList.add('flash-active');
+            }
+
+            setTimeout(() => {
+                banner.classList.remove('banner-active');
+            }, 2500);
+
+            setTimeout(() => {
+                app.classList.remove('shake-active');
+                flash.classList.remove('flash-active');
+            }, 400);
+        }
+
+        function executeBoost(playerIndex) {
+            if (playerIndex === 1) {
+                STATE.pot01 += 150;
+            } else {
+                STATE.pot02 += 150;
+            }
+            syncUIVisuals();
+        }
+
+        function syncUIVisuals() {
+            // Bereken de cubic-bezier ratio
+            const total = STATE.pot01 + STATE.pot02;
+            const percentage1 = (STATE.pot01 / total) * 100;
+            
+            document.documentElement.style.setProperty('--pot-1-fill', `${percentage1}%`);
+            document.getElementById('pot-display-1').innerText = `€${STATE.pot01.toLocaleString('nl-NL')}`;
+            document.getElementById('pot-display-2').innerText = `€${STATE.pot02.toLocaleString('nl-NL')}`;
+
+            // Sync syncable data terug naar sliders in settings paneel zodat ze synchroon lopen
+            document.getElementById('cfg-pot1').value = STATE.pot01;
+            document.getElementById('cfg-pot2').value = STATE.pot02;
+        }
+
+        // --- CONTROL CENTER ARCHITECTURE ---
+
+        function toggleControlCenter(open) {
+            const cc = document.getElementById('control-center');
+            if (open) {
+                cc.classList.add('cc-open');
+            } else {
+                cc.classList.remove('cc-open');
+            }
+        }
+
+        function updateSystemState() {
+            // Live synchronisatie zonder herladen van de pagina
+            const userIn = document.getElementById('cfg-username').value.trim();
+            if(userIn !== "") {
+                STATE.operatorName = userIn;
+            }
+            
+            STATE.pot01 = parseInt(document.getElementById('cfg-pot1').value);
+            STATE.pot02 = parseInt(document.getElementById('cfg-pot2').value);
+            
+            STATE.fxOverdrive = document.getElementById('cfg-fx').checked;
+            
+            if(STATE.fxOverdrive) {
+                document.body.classList.remove('fx-disabled');
+            } else {
+                document.body.classList.add('fx-disabled');
+            }
+
+            syncUIVisuals();
+        }
+
+        // --- ENGAGE ON LOAD ---
+        window.onload = () => {
+            initChatEngine();
+            syncUIVisuals();
+            
+            // Randomiseer live viewer counters om de 4 seconden voor realisme
+            setInterval(() => {
+                const v1 = (14 + Math.random() * 2).toFixed(1);
+                const v2 = (18 + Math.random() * 3).toFixed(1);
+                document.getElementById('viewers-1').innerText = v1 + "K";
+                document.getElementById('viewers-2').innerText = v2 + "K";
+            }, 400);
+        };
     </script>
 </body>
 </html>
+
+```
