@@ -3,336 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS - MASTER STAGE V8</title>
+    <title>NEXUS - PRESTIGE V10</title>
     <style>
-        /* Reset & Core Styling */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; user-select: none; }
-        body { background: #03060f; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 5px; }
+        /* Base Cyber Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Segoe UI', sans-serif; user-select: none; }
+        body { background: #010206; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; position: relative; }
+
+        /* Perfect Fit Phone Simulator */
+        .phone-container { 
+            width: 100%; max-width: 420px; height: 100vh; background: #04060f; 
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+            border: 2px solid #111827; box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            transition: transform 0.1s ease;
+        }
+
+        /* Screen Shake & Flash Animatie */
+        .flash-overlay { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 999; }
+        @keyframes strikeFlash { 0% { opacity: 0; } 15% { opacity: 0.7; } 30% { opacity: 0; } }
+        @keyframes screenShake { 0%, 100% { transform: scale(1) translate(0, 0); } 20% { transform: scale(0.98) translate(-4px, 3px); } 40% { transform: translate(4px, -2px); } 66% { transform: translate(-2px, -3px); } 80% { transform: translate(2px, 2px); } }
+
+        /* Premium Black Ops Header */
+        .app-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #070a14; border-bottom: 2px solid #ff5500; }
+        .logo-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ff5500; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,85,0,0.5); }
+        .owner-cash { font-size: 12px; color: #00ffcc; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,204,0.4); text-align: right; }
+
+        /* Workspace Grid Layout */
+        .view-segment { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 8px; padding-bottom: 65px; }
+
+        /* 1vs1 Arena Vakken met Neon Glow */
+        .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; flex-shrink: 0; }
+        .stream-card { 
+            background: #090e1f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); 
+            position: relative; height: 110px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 6px; 
+        }
+        .stream-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, #04060f 100%); z-index: 1; }
+        .stream-card.active-blue { border-color: #00ffcc; box-shadow: 0 0 15px #00ffcc; }
+        .stream-card.active-pink { border-color: #ff0055; box-shadow: 0 0 15px #ff0055; }
         
-        /* Premium Smartphone Container Simulator */
-        .phone-container { width: 100%; max-width: 412px; height: 95vh; max-height: 880px; background: #070b19; border: 3px solid #1e293b; border-radius: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.8); }
+        .live-pill { position: absolute; top: 6px; left: 6px; background: #ff0055; color: #fff; font-size: 8px; padding: 2px 5px; border-radius: 3px; z-index: 2; font-weight: bold; }
+        .viewer-pill { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.6); font-size: 8px; padding: 2px 5px; border-radius: 3px; z-index: 2; }
+        .profile-title { font-size: 13px; font-weight: 900; z-index: 2; }
+        .profile-sub { font-size: 9px; color: #ff5500; font-weight: bold; z-index: 2; }
+
+        /* Ratio bar */
+        .ratio-bar-container { background: #080c16; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; }
+        .track-bar { width: 100%; height: 5px; background: #161d31; border-radius: 2px; overflow: hidden; display: flex; }
+        .fill-left { width: 50%; background: #00ffcc; box-shadow: 0 0 8px #00ffcc; transition: width 0.3s ease; }
+        .fill-right { flex: 1; background: #ff0055; box-shadow: 0 0 8px #ff0055; }
+
+        /* 🔥 DE ULTIEME CHATBOX (OPGELOST EN VOLLEDIG OPTIMAAL) */
+        .chat-view-master { 
+            flex: 1; background: rgba(3, 5, 11, 0.95); border-radius: 10px; 
+            border: 1px solid rgba(255,255,255,0.03); padding: 8px; 
+            display: flex; flex-direction: column; gap: 6px; overflow-y: auto; 
+            margin-bottom: 6px; min-height: 150px;
+        }
+
+        /* --- PRESTIGE BADGES & ELEMENTEN GENERATOR --- */
+        .msg-line { display: flex; flex-direction: column; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.01); border-left: 3px solid #ff5500; }
+        .msg-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
         
-        /* High-End App Header */
-        .app-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(11, 17, 36, 0.8); backdrop-filter: blur(20px); z-index: 10; }
-        .logo-text { font-size: 24px; font-weight: 900; background: linear-gradient(45deg, #00ffcc, #0077ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; }
-        .owner-stats { text-align: right; }
-        .owner-badge { background: linear-gradient(135deg, #d4af37, #ff3300); color: #fff; padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 0 12px rgba(212,175,55,0.4); border: 1px solid rgba(255,255,255,0.2); }
-        .owner-cash { font-size: 12px; color: #00ffcc; font-weight: 800; margin-top: 4px; }
-
-        /* Navigation View Container */
-        .view-segment { flex: 1; display: none; overflow: hidden; position: relative; padding-bottom: 75px; }
-        .view-segment.active-view { display: flex; flex-direction: column; }
-
-        /* --- STAGE PANEEL ELEMENTS --- */
-        .stage-padding { padding: 12px; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-
-        /* 1vs1 Live Stream Video Vakken */
-        .live-arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .stream-card { background: #0d152d; border-radius: 16px; border: 2px solid rgba(255,255,255,0.05); position: relative; aspect-ratio: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); transition: border-color 0.3s; }
+        /* CoD Badge Bouwwerk */
+        .prestige-badge { 
+            font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 3px; 
+            color: #fff; text-transform: uppercase; display: inline-flex; align-items: center; gap: 3px;
+            border: 1px solid rgba(255,255,255,0.1); text-shadow: 0 1px 2px #000;
+        }
+        .badge-lvl-water { background: linear-gradient(135deg, #0055ff, #00d2ff); box-shadow: 0 0 6px #0055ff; }
+        .badge-lvl-shock { background: linear-gradient(135deg, #ffcc00, #ff5500); box-shrink: 0; animation: jitter 0.15s infinite alternate; box-shadow: 0 0 6px #ff5500; }
         
-        /* Premium neon border animatie om de actieve streamer */
-        .stream-card.active-stream-blue { border-color: #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.2); }
-        .stream-card.active-stream-pink { border-color: #ff0055; box-shadow: 0 0 15px rgba(255,0,85,0.2); }
+        /* JOUW GOD-MODE MASTER PRESTIGE BADGE */
+        .badge-lvl-god { 
+            background: linear-gradient(90deg, #ff0055, #ffcc00, #00ffcc, #ff0055); background-size: 300% auto;
+            animation: camoShift 3s linear infinite; font-weight: 900; color: #fff;
+            border: 1px solid #fff; box-shadow: 0 0 12px #00ffcc;
+        }
 
-        /* Sfeer Video Simulator */
-        .video-bg-simulation { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.65); animation: auroraWave 6s ease infinite alternate; }
-        @keyframes auroraWave { 0% { transform: scale(1) rotate(0deg); opacity: 0.8; } 100% { transform: scale(1.06) rotate(1deg); opacity: 1; } }
-
-        .live-pill { position: absolute; top: 10px; left: 10px; background: #ff0055; color: #fff; font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(255,0,85,0.4); }
-        .viewer-pill { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-        .profile-title { font-size: 14px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.9); z-index: 2; }
-        .profile-sub { font-size: 10px; color: #00ffcc; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.9); z-index: 2; margin-top: 1px; }
-
-        /* Progress Ratio Bar */
-        .ratio-bar-container { background: rgba(13,21,45,0.6); padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); margin-bottom: 10px; }
-        .ratio-labels { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; color: #94a3b8; }
-        .track-bar { width: 100%; height: 8px; background: #162242; border-radius: 10px; overflow: hidden; display: flex; }
-        .fill-left { width: 50%; height: 100%; background: linear-gradient(90deg, #00ffcc, #0077ff); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1); }
-        .fill-right { flex: 1; height: 100%; background: linear-gradient(90deg, #ff0055, #b100ff); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1); }
-
-        /* PERFECTE VASTE CHATBOX (OPGELOST) */
-        .chat-view-master { flex: 1; min-height: 180px; max-height: 260px; background: rgba(6, 10, 23, 0.7); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; margin-bottom: 12px; box-shadow: inset 0 4px 20px rgba(0,0,0,0.4); scroll-behavior: smooth; }
+        /* --- EXTREME NAAM CAMO'S EN AURAS --- */
+        .name-txt { font-weight: 900; font-size: 12px; letter-spacing: 0.5px; }
         
-        /* Premium Chat Berichten & Balkjes */
-        .msg-line { display: flex; flex-direction: column; gap: 3px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.02); border-left: 3px solid #475569; animation: msgFadeIn 0.25s ease-out forwards; }
-        @keyframes msgFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Water Aura */
+        .camo-water { color: #00d2ff; text-shadow: 0 0 8px rgba(0,210,255,0.6); animation: waveMotion 2s infinite alternate; }
+        /* Bliksem Aura */
+        .camo-shock { color: #ffea00; text-shadow: 0 0 10px #ffea00, 0 0 2px #fff; }
         
-        /* Badges & Ranks */
-        .msg-meta { display: flex; align-items: center; gap: 6px; }
-        .rank-badge { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px; color: #fff; text-transform: uppercase; }
-        .rank-user { background: #3b82f6; }
-        .rank-vip { background: #ef4444; }
-        
-        /* JOUW EXCLUSIEVE OWNER OVERDRIVE BALKJE */
-        .msg-line.owner-line { background: linear-gradient(90deg, rgba(212,175,55,0.12) 0%, rgba(255,51,0,0.03) 100%); border-left: 3px solid #d4af37; box-shadow: inset 0 0 10px rgba(212,175,55,0.1); }
-        .rank-owner { background: linear-gradient(45deg, #d4af37, #ff3300); font-weight: 900; box-shadow: 0 0 8px rgba(212,175,55,0.5); border: 1px solid rgba(255,255,255,0.3); }
-        .name-owner { font-weight: 900; background: linear-gradient(90deg, #ffffff, #d4af37, #ff3300); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 12px rgba(212,175,55,0.3); font-size: 13px; }
-        
-        .name-normal { font-weight: 700; color: #cbd5e1; font-size: 12.5px; }
-        .text-normal { color: #94a3b8; font-size: 12px; line-height: 1.4; }
-        .text-gift { font-weight: 800; color: #ffbc00; font-size: 12.5px; }
+        /* 👑 JOUW GEANIMEERDE DARK MATTER CAMO + ULTRA AURA */
+        .camo-pixelgod {
+            background: linear-gradient(90deg, #ff00aa, #7700ff, #00ffcc, #ffbc00, #ff00aa);
+            background-size: 400% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: camoShift 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.8));
+            font-size: 13px; text-transform: uppercase;
+        }
 
-        /* Compact Gift Paneel */
-        .gift-title { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
-        .gift-node { background: #0c1226; border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: all 0.2s; }
-        .gift-node:hover { border-color: #00ffcc; background: rgba(0,255,204,0.04); transform: translateY(-1px); }
-        .gift-node:active { transform: scale(0.95); }
-        .gift-avatar { font-size: 18px; }
-        .gift-lbl { font-size: 8px; font-weight: 700; color: #64748b; }
-        .gift-val { font-size: 9px; font-weight: 900; color: #00ffcc; }
+        /* Animatie Keyframes */
+        @keyframes camoShift { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
+        @keyframes waveMotion { 0% { transform: skewX(-2deg); } 100% { transform: skewX(2deg); } }
+        @keyframes jitter { 0% { transform: translateY(0); } 100% { transform: translateY(1px); } }
 
-        /* Actie Knoppen Grid */
-        .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 8px; align-items: center; background: #0a0f21; padding: 8px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.03); }
+        .text-normal { color: #94a3b8; font-size: 12px; font-family: 'Segoe UI', sans-serif; font-weight: 500; }
+        .text-gift { font-weight: 900; color: #ffcc00; font-size: 12px; text-shadow: 0 0 8px #ffcc00; }
+
+        /* Compact Gifts Menu */
+        .gift-title { font-size: 9px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 4px; }
+        .gift-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
+        .gift-node { background: #070c18; border: 1px solid rgba(255,255,255,0.03); border-radius: 6px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .gift-node:active { transform: scale(0.92); }
+        .gift-avatar { font-size: 16px; }
+        .gift-lbl { font-size: 8px; color: #475569; font-weight: bold; }
+        .gift-val { font-size: 8px; font-weight: 900; color: #00ffcc; }
+
+        /* Bottom Command Panel */
+        .controls-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px; align-items: center; background: #050813; padding: 5px; border-radius: 8px; }
         .pot-box { display: flex; flex-direction: column; }
-        .pot-lbl { font-size: 8px; font-weight: 700; color: #475569; text-transform: uppercase; }
-        .pot-cash { font-size: 14px; font-weight: 900; }
+        .pot-lbl { font-size: 7px; color: #475569; font-weight: bold; }
+        .pot-cash { font-size: 12px; font-weight: 900; }
         .c-blue { color: #00ffcc; } .c-pink { color: #ff0055; }
-        .action-btn { border: none; padding: 12px 10px; font-weight: 800; font-size: 11px; border-radius: 10px; cursor: pointer; text-transform: uppercase; transition: transform 0.1s, opacity 0.2s; color: #fff; }
-        .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #03060f; box-shadow: 0 4px 15px rgba(0,255,204,0.2); }
-        .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 4px 15px rgba(255,0,85,0.2); }
-        .action-btn:active { transform: scale(0.96); }
+        
+        .action-btn { border: none; padding: 10px 2px; font-weight: 900; font-size: 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; color: #fff; }
+        .btn-blue { background: linear-gradient(135deg, #00ffcc, #0055ff); color: #000; box-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        .btn-pink { background: linear-gradient(135deg, #ff0055, #8800ff); box-shadow: 0 0 10px rgba(255,0,85,0.3); }
 
-        /* --- CONFIGURATION & SETTINGS TAB --- */
-        .menu-headline { font-size: 18px; font-weight: 800; margin-bottom: 15px; letter-spacing: 0.5px; }
-        .dashboard-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; margin-bottom: 10px; }
-        .switch-container { display: flex; justify-content: space-between; align-items: center; }
-        .toggle-input { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .toggle-input input { opacity: 0; width: 0; height: 0; }
-        .slider-round { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #1e293b; transition: .2s; border-radius: 20px; }
-        .slider-round::before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: #64748b; transition: .2s; border-radius: 50%; }
-        input:checked + .slider-round { background: linear-gradient(45deg, #00ffcc, #0077ff); }
-        input:checked + .slider-round::before { transform: translateX(20px); background-color: #fff; }
-
-        /* --- BOTTOM NAVIGATION SYSTEM --- */
-        .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 68px; background: rgba(5, 8, 19, 0.9); backdrop-filter: blur(25px); border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; align-items: center; z-index: 20; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; color: #475569; width: 30%; height: 100%; font-weight: 800; font-size: 10px; transition: color 0.2s; }
-        .nav-link.active-link { color: #00ffcc; }
-        .nav-gfx { font-size: 20px; transition: transform 0.2s; }
-        .active-link .nav-gfx { transform: translateY(-2px); text-shadow: 0 0 10px rgba(0,255,204,0.6); }
+        /* Fixed Footer Navbar */
+        .bottom-navbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #03050c; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #475569; font-size: 9px; font-weight: bold; }
+        .nav-link.active-link { color: #ff5500; text-shadow: 0 0 8px #ff5500; }
     </style>
 </head>
 <body>
 
-    <div class="phone-container" id="appShell">
+    <div class="flash-overlay" id="flashFx"></div>
+
+    <div class="phone-container" id="shell">
         
         <div class="app-header">
-            <span class="logo-text">NEXUS</span>
-            <div class="owner-stats">
-                <span class="owner-badge">👑 VIP OWNER</span>
-                <div class="owner-cash" id="walletDisplay">BALANCE: €150.00</div>
+            <span class="logo-text">NEXUS OPERATOR</span>
+            <div>
+                <div class="owner-cash" id="walletDisplay">WALLET: €150.00</div>
             </div>
         </div>
 
-        <div class="view-segment active-view" id="tab-stage">
-            <div class="stage-padding">
-                
-                <div class="live-arena-grid">
-                    <div class="stream-card active-stream-blue" id="boxStreamerA">
-                        <div class="video-bg-simulation" style="background-image: linear-gradient(45deg, rgba(0,255,204,0.15), rgba(0,85,255,0.3));"></div>
-                        <div class="live-pill">LIVE</div>
-                        <div class="viewer-pill">👁️ 8.4K</div>
-                        <div class="profile-title">Marouane_Live</div>
-                        <div class="profile-sub">🏆 RANK #1 STRIKER</div>
-                    </div>
-                    <div class="stream-card" id="boxStreamerB">
-                        <div class="video-bg-simulation" style="background-image: linear-gradient(45deg, rgba(255,0,85,0.15), rgba(136,0,255,0.3));"></div>
-                        <div class="live-pill">LIVE</div>
-                        <div class="viewer-pill">👁️ 1.2K</div>
-                        <div class="profile-title">Anas_PvP</div>
-                        <div class="profile-sub">⚡ ARENA SLAYER</div>
-                    </div>
+        <div class="view-segment">
+            
+            <div class="live-arena-grid">
+                <div class="stream-card active-blue" id="boxA">
+                    <div class="live-pill">LIVE</div>
+                    <div class="viewer-pill">👁️ 8.4K</div>
+                    <div class="profile-title">Marouane_Live</div>
+                    <div class="profile-sub">PRESTIGE MASTER</div>
                 </div>
-
-                <div class="ratio-bar-container">
-                    <div class="ratio-labels">
-                        <span>Node 01 Support</span>
-                        <span style="color:#ff0055;">Node 02 Support</span>
-                    </div>
-                    <div class="track-bar">
-                        <div class="fill-left" id="powerRatioA" style="width: 50%;"></div>
-                        <div class="fill-right" id="powerRatioB"></div>
-                    </div>
+                <div class="stream-card" id="boxB">
+                    <div class="live-pill">LIVE</div>
+                    <div class="viewer-pill">👁️ 1.2K</div>
+                    <div class="profile-title">Anas_PvP</div>
+                    <div class="profile-sub">ELITE COMMANDO</div>
                 </div>
-
-                <div class="chat-view-master" id="liveChatFlow">
-                    <div class="msg-line">
-                        <div class="msg-meta">
-                            <span class="rank-badge rank-user">LVL 12</span>
-                            <span class="name-normal">SolanaKoning</span>
-                        </div>
-                        <span class="text-normal">Gooi die pot omhoog boys, strijd! 🔥</span>
-                    </div>
-                </div>
-
-                <div class="gift-title">Kies een Premium Gift</div>
-                <div class="gift-row">
-                    <div class="gift-node" onclick="fireMasterGift('🔥 Nitro Boost', '€10.00', '#ff5500')">
-                        <span class="gift-avatar">🔥</span>
-                        <span class="gift-lbl">Nitro Boost</span>
-                        <span class="gift-val">€10</span>
-                    </div>
-                    <div class="gift-node" onclick="fireMasterGift('💎 Diamond Drop', '€25.00', '#00ffcc')">
-                        <span class="gift-avatar">💎</span>
-                        <span class="gift-lbl">Diamond</span>
-                        <span class="gift-val">€25</span>
-                    </div>
-                    <div class="gift-node" onclick="fireMasterGift('👑 Emperor Crown', '€50.00', '#ffbc00')">
-                        <span class="gift-avatar">👑</span>
-                        <span class="gift-lbl">Crown</span>
-                        <span class="gift-val">€50</span>
-                    </div>
-                    <div class="gift-node" onclick="fireMasterGift('🚀 Matrix Rocket', '€100.00', '#aa00ff')">
-                        <span class="gift-avatar">🚀</span>
-                        <span class="gift-lbl">Rocket</span>
-                        <span class="gift-val">€100</span>
-                    </div>
-                </div>
-
-                <div class="controls-row">
-                    <div class="pot-box">
-                        <span class="pot-lbl">POT 01</span>
-                        <span class="pot-cash c-blue" id="cashPotA">€4340</span>
-                    </div>
-                    <button class="action-btn btn-blue" onclick="executeSupport('A')">Steun Marouane</button>
-                    <button class="action-btn btn-pink" onclick="executeSupport('B')">Steun Anas</button>
-                    <div class="pot-box" style="text-align: right;">
-                        <span class="pot-lbl">POT 02</span>
-                        <span class="pot-cash c-pink" id="cashPotB">€360</span>
-                    </div>
-                </div>
-
             </div>
-        </div>
 
-        <div class="view-segment" id="tab-config" style="padding: 20px;">
-            <h2 class="menu-headline">⚙️ Platform Creator Tools</h2>
-            <div class="dashboard-card">
-                <div style="font-weight: 800; font-size: 15px;">grmryzen-pixelGOD</div>
-                <div style="font-size: 11px; color: #d4af37; font-weight: 700; margin-top: 2px;">NETWORK ROOT ACCESS GRANTED</div>
-            </div>
-            <div class="dashboard-card switch-container">
-                <div>
-                    <div style="font-size: 13px; font-weight: 700;">Glow Overlay FX</div>
-                    <div style="font-size: 11px; color:#64748b;">Schakel extreme chatverlichting in.</div>
+            <div class="ratio-bar-container">
+                <div class="track-bar">
+                    <div class="fill-left" id="powerRatioA" style="width: 50%;"></div>
+                    <div class="fill-right"></div>
                 </div>
-                <label class="toggle-input"><input type="checkbox" checked><span class="slider-round"></span></label>
             </div>
-        </div>
 
-        <div class="view-segment" id="tab-stats" style="padding: 20px;">
-            <h2 class="menu-headline">📊 Live Network Revenue</h2>
-            <div class="dashboard-card">
-                <div style="font-size: 11px; color:#64748b; font-weight: 800; text-transform: uppercase;">Total Transacted Volume</div>
-                <div style="font-size: 28px; font-weight: 900; color:#00ffcc; margin-top: 4px;" id="totalVolumeDisplay">€4700.00</div>
+            <div class="chat-view-master" id="chatFlow">
+                <div class="msg-line" style="border-left-color: #0055ff;">
+                    <div class="msg-meta">
+                        <span class="prestige-badge badge-lvl-water">💧 LVL 15</span>
+                        <span class="name-txt camo-water">SolanaKoning</span>
+                    </div>
+                    <span class="text-normal">Die nieuwe camo's zijn niet normaal broer! 🤯</span>
+                </div>
             </div>
+
+            <div class="gift-title">Lanceer Prestige Killstreak Gift</div>
+            <div class="gift-row">
+                <div class="gift-node" onclick="dropPrestigeGift('⚡ RC-XD Shock', 10)">
+                    <span class="gift-avatar">⚡</span>
+                    <span class="gift-lbl">RC-XD Shock</span>
+                    <span class="gift-val">€10</span>
+                </div>
+                <div class="gift-node" onclick="dropPrestigeGift('🔮 UAV Aura', 25)">
+                    <span class="gift-avatar">🔮</span>
+                    <span class="gift-lbl">UAV Aura</span>
+                    <span class="gift-val">€25</span>
+                </div>
+                <div class="gift-node" onclick="dropPrestigeGift('👑 Chopper Gunner', 50)">
+                    <span class="gift-avatar">👑</span>
+                    <span class="gift-lbl">Chopper VIP</span>
+                    <span class="gift-val">€50</span>
+                </div>
+                <div class="gift-node" onclick="dropPrestigeGift('🚀 Nuke Drop', 100)">
+                    <span class="gift-avatar">🚀</span>
+                    <span class="gift-lbl">MOAB NUKE</span>
+                    <span class="gift-val">€100</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="pot-box">
+                    <span class="pot-lbl">POT 01</span>
+                    <span class="pot-cash c-blue" id="potDisplayA">€4340</span>
+                </div>
+                <button class="action-btn btn-blue" onclick="sendNodeBoost('A')">BOOST NODE 01</button>
+                <button class="action-btn btn-pink" onclick="sendNodeBoost('B')">BOOST NODE 02</button>
+                <div class="pot-box" style="text-align: right;">
+                    <span class="pot-lbl">POT 02</span>
+                    <span class="pot-cash c-pink" id="potDisplayB">€360</span>
+                </div>
+            </div>
+
         </div>
 
         <div class="bottom-navbar">
-            <div class="nav-link active-link" id="link-stage" onclick="switchTab('stage')"><span class="nav-gfx">📺</span><span>Live Stage</span></div>
-            <div class="nav-link" id="link-config" onclick="switchTab('config')"><span class="nav-gfx">⚙️</span><span>Config</span></div>
-            <div class="nav-link" id="link-stats" onclick="switchTab('stats')"><span class="nav-gfx">📊</span><span>Analytics</span></div>
+            <div class="nav-link active-link"><span>STAGE V10</span></div>
+            <div class="nav-link"><span>CONFIG</span></div>
+            <div class="nav-link"><span>STATS</span></div>
         </div>
 
     </div>
 
-    <script>
-        let fundA = 4340;
-        let fundB = 360;
-        let bankroll = 150.00;
+    <script {isCodeAccessible=true}>
+        let pA = 4340;
+        let pB = 360;
+        let wallet = 150.00;
 
-        const fakeUsers = ["NXT_Lvl", "Riffi030", "AppBuilder", "CryptoStriker", "Maroc_PvP"];
-        const fakeTexts = ["Wat een intense match bro!", "Gooi die saaf op rood!", "Node 01 gaat echt te snel", "Kijk die winstreak dan haha"];
+        const mockNames = ["Riffi_Commando", "Mo_BlackOps", "SniperElite", "Tarifit_Warrior"];
+        const mockTexts = ["Gooi die nuke dan!", "Knettert helemaal op m'n scherm", "Team 01 heeft betere camo", "Zieke stroom effecten bro"];
 
-        function switchTab(targetTab) {
-            document.querySelectorAll('.view-segment').forEach(v => v.classList.remove('active-view'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+        function triggerImpactFx() {
+            // Screen flash effect
+            let flash = document.getElementById("flashFx");
+            flash.style.animation = "strikeFlash 0.25s ease-out";
             
-            document.getElementById('tab-' + targetTab).classList.add('active-view');
-            document.getElementById('link-' + targetTab).classList.add('active-link');
+            // Screen shake container effect
+            let container = document.getElementById("shell");
+            container.style.animation = "screenShake 0.35s ease-in-out";
+            
+            setTimeout(() => {
+                flash.style.animation = "";
+                container.style.animation = "";
+            }, 350);
         }
 
-        function refreshRatios() {
-            let total = fundA + fundB;
-            let percentageA = (fundA / total) * 100;
-            document.getElementById("powerRatioA").style.width = percentageA + "%";
-            document.getElementById("totalVolumeDisplay").innerText = "€" + total + ".00";
-        }
-
-        function executeSupport(side) {
-            if(side === 'A') {
-                fundA += 100;
-                document.getElementById("cashPotA").innerText = "€" + fundA;
-                document.getElementById("boxStreamerA").classList.add("active-stream-blue");
-                document.getElementById("boxStreamerB").classList.remove("active-stream-pink");
+        function sendNodeBoost(target) {
+            triggerImpactFx();
+            if(target === 'A') {
+                pA += 150;
+                document.getElementById("potDisplayA").innerText = "€" + pA;
+                document.getElementById("boxA").classList.add("active-blue");
+                document.getElementById("boxB").classList.remove("active-pink");
             } else {
-                fundB += 100;
-                document.getElementById("cashPotB").innerText = "€" + fundB;
-                document.getElementById("boxStreamerB").classList.add("active-stream-pink");
-                document.getElementById("boxStreamerA").classList.remove("active-stream-blue");
+                pB += 150;
+                document.getElementById("potDisplayB").innerText = "€" + pB;
+                document.getElementById("boxB").classList.add("active-pink");
+                document.getElementById("boxA").classList.remove("active-blue");
             }
-            refreshRatios();
             
-            // Zend direct een chat-injectie uit met jouw speciale eigenaar-stijl!
-            postToChatFlow("grmryzen-pixelGOD", "Heeft Node 0" + (side === 'A' ? '1' : '2') + " geboost met €100!", "rank-owner", true, false, "");
+            let totalSum = pA + pB;
+            document.getElementById("powerRatioA").style.width = ((pA / totalSum) * 100) + "%";
             
-            // Trigger een automatische kijker reactie na een halve seconde
-            setTimeout(injectViewerChat, 500);
+            injectPrestigeChat("grmryzen-pixelGOD", `COMMITTED €150 BOOST DIRECT OP NODE 0${target === 'A' ? '1' : '2'}! ⚡⚡`, true, false);
+            setTimeout(simulateActiveChat, 400);
         }
 
-        function fireMasterGift(giftName, priceText, glowColor) {
-            let giftValue = parseFloat(priceText.replace('€', ''));
-            bankroll += giftValue;
-            document.getElementById("walletDisplay").innerText = "BALANCE: €" + bankroll.toFixed(2);
+        function dropPrestigeGift(giftName, price) {
+            triggerImpactFx();
+            wallet += price;
+            document.getElementById("walletDisplay").innerText = "WALLET: €" + wallet.toFixed(2);
             
-            postToChatFlow("grmryzen-pixelGOD", `Verstuurde een ${giftName} (${priceText}) naar de stream!`, "rank-owner", true, true, glowColor);
-            
-            // Screen vibration effect voor maximale gift impact
-            let device = document.getElementById("appShell");
-            device.style.transform = "scale(0.985)";
-            setTimeout(() => { device.style.transform = "scale(1)"; }, 120);
-
-            setTimeout(injectViewerChat, 600);
+            injectPrestigeChat("grmryzen-pixelGOD", `DEPLOYED HIGH-END CALLOUT STREAK: ${giftName.toUpperCase()}! 🚀💥`, true, true);
+            setTimeout(simulateActiveChat, 500);
         }
 
-        function postToChatFlow(username, message, badgeClass, isOwner = false, isGift = false, giftGlow = "") {
-            let chatBox = document.getElementById("liveChatFlow");
-            let msgRow = document.createElement("div");
-            
-            if (isOwner) {
-                msgRow.className = "msg-line owner-line";
+        function injectPrestigeChat(sender, message, isGodMode, isGift) {
+            let flow = document.getElementById("chatFlow");
+            let element = document.createElement("div");
+            element.className = "msg-line";
+
+            if (isGodMode) {
+                element.className = "msg-line owner-line";
+                element.style.borderLeft = "4px solid #00ffcc";
+                element.style.background = "linear-gradient(90deg, rgba(0,255,204,0.1) 0%, transparent 100%)";
+                
+                element.innerHTML = `
+                    <div class="msg-meta">
+                        <span class="prestige-badge badge-lvl-god">👑 PRESTIGE GOD</span>
+                        <span class="name-txt camo-pixelgod">${sender}</span>
+                    </div>
+                    <span class="${isGift ? 'text-gift' : 'text-normal'}" style="color: #fff; font-weight: 800;">${message}</span>
+                `;
             } else {
-                msgRow.className = "msg-line";
-            }
-            
-            let nameClass = isOwner ? "name-owner" : "name-normal";
-            let textClass = isGift ? "text-gift" : "text-normal";
-            let badgeTitle = isOwner ? "PRSTG X" : "LVL " + Math.floor(Math.random() * 30 + 1);
+                // Willekeurige toewijzing van effecten voor kijkers (Water of Stroom)
+                let roll = Math.random() > 0.5;
+                let badgeClass = roll ? "badge-lvl-water" : "badge-lvl-shock";
+                let camoClass = roll ? "camo-water" : "camo-shock";
+                let levelNum = roll ? "💧 LVL " + Math.floor(Math.random() * 20 + 1) : "⚡ LVL " + Math.floor(Math.random() * 30 + 21);
+                element.style.borderLeft = roll ? "3px solid #0055ff" : "3px solid #ff5500";
 
-            if (isGift && giftGlow !== "") {
-                msgRow.style.borderLeft = "3px solid " + giftGlow;
-                msgRow.style.boxShadow = "inset 0 0 12px " + giftGlow + "25";
+                element.innerHTML = `
+                    <div class="msg-meta">
+                        <span class="prestige-badge ${badgeClass}">${levelNum}</span>
+                        <span class="name-txt ${camoClass}">${sender}</span>
+                    </div>
+                    <span class="text-normal">${message}</span>
+                `;
             }
 
-            msgRow.innerHTML = `
-                <div class="msg-meta">
-                    <span class="rank-badge ${badgeClass}">${badgeTitle}</span>
-                    <span class="${nameClass}">${username}</span>
-                </div>
-                <span class="${textClass}">${message}</span>
-            `;
-            
-            chatBox.appendChild(msgRow);
-            
-            // Automatisch naar beneden scrollen zodat nieuwe berichten direct in beeld komen!
-            chatBox.scrollTop = chatBox.scrollHeight;
+            flow.appendChild(element);
+            flow.scrollTop = flow.scrollHeight;
         }
 
-        function injectViewerChat() {
-            let user = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
-            let text = fakeTexts[Math.floor(Math.random() * fakeTexts.length)];
-            let badge = Math.random() > 0.5 ? "rank-user" : "rank-vip";
-            postToChatFlow(user, text, badge, false, false, "");
+        function simulateActiveChat() {
+            let user = mockNames[Math.floor(Math.random() * mockNames.length)];
+            let txt = mockTexts[Math.floor(Math.random() * mockTexts.length)];
+            injectPrestigeChat(user, txt, false, false);
         }
     </script>
 </body>
